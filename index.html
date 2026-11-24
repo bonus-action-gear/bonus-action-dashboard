@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bonus Action • Command, Catalog, Inventory & Expense Dashboard</title>
 
-  <!-- Google Fonts: Inter & Orbitron for Neon Arcade aesthetic -->
+  <!-- Google Fonts: Inter, Orbitron & Permanent Marker for Neon Arcade aesthetic -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -183,14 +183,10 @@
                 fill="none"
                 filter="url(#ba-pink-glow)"
               >
-                <!-- Center Triangle -->
                 <polygon points="110,52 162,144 58,144" />
-                <!-- Top Spokes -->
                 <line x1="110" y1="12" x2="110" y2="52" />
-                <!-- Upper Left / Right Spokes -->
                 <line x1="24" y1="61" x2="110" y2="52" />
                 <line x1="196" y1="61" x2="110" y2="52" />
-                <!-- Side & Bottom Spokes -->
                 <line x1="24" y1="61" x2="58" y2="144" />
                 <line x1="196" y1="61" x2="162" y2="144" />
                 <line x1="24" y1="159" x2="58" y2="144" />
@@ -237,9 +233,7 @@
                 stroke="#ffffff"
                 stroke-width="3.2"
               />
-              <!-- Left Open Eye -->
               <ellipse cx="101.5" cy="108" rx="4.2" ry="5.5" fill="#ffffff" />
-              <!-- Right Winking Eye -->
               <path
                 d="M114 105 L121 108 L114 111"
                 fill="none"
@@ -248,7 +242,6 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
-              <!-- Smile -->
               <path
                 d="M100 119 Q110 127 120 119"
                 fill="none"
@@ -273,7 +266,56 @@
             </p>
           </div>
         </div>
-<!-- ... existing code ... -->
+
+        <!-- Global Backup, Restore & Export Toolbar -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            id="btn-export-csv"
+            type="button"
+            class="neon-btn-cyan rounded-xl px-3 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+            title="Download Schedule C ready CSV of expenses"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Schedule C CSV</span>
+          </button>
+
+          <button
+            id="btn-export-catalog-csv"
+            type="button"
+            class="rounded-xl bg-surface hover:bg-white/10 text-gray-200 border border-white/15 px-3 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition"
+            title="Download Products & Orders CSV"
+          >
+            <span>Catalog/Orders CSV</span>
+          </button>
+
+          <button
+            id="btn-export-json"
+            type="button"
+            class="neon-btn-pink rounded-xl px-3 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+            title="Download full JSON backup of all expenses, products, orders, and inventory"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>JSON Backup</span>
+          </button>
+
+          <label
+            for="import-json-input"
+            class="cursor-pointer rounded-xl bg-surface hover:bg-white/10 text-neonCyan border border-neonCyan/40 px-3 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition"
+            title="Restore state from a previously saved Bonus Action JSON backup"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span>Restore JSON</span>
+            <input id="import-json-input" type="file" accept=".json,application/json" class="hidden" />
+          </label>
+        </div>
+      </div>
+
       <!-- Primary & Expansion Navigation Bar (Ordered: Profit & Loss, Expenses, Inventory, Orders, Product Catalog) -->
       <nav aria-label="Dashboard Modules" class="mt-4 flex items-center gap-2 overflow-x-auto pb-1">
         <button
@@ -438,9 +480,122 @@
     <!-- ===================================================================== -->
     <section id="view-expenses" class="tab-view hidden space-y-6">
       <!-- KPI Summary Cards -->
-<!-- ... existing code ... -->
-            <!-- Sample Receipt Preset Selector -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Total Logged Spend</span>
+            <span class="rounded-md bg-neonCyan/10 px-2 py-0.5 text-[10px] text-neonCyan">YTD / All</span>
+          </div>
+          <div id="kpi-total-spend" class="mt-2 font-display text-2xl sm:text-3xl font-black text-white">$0.00</div>
+          <p id="kpi-total-count" class="mt-1 text-xs text-gray-400">0 transactions recorded</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal arcade-frame-pink p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Direct COGS</span>
+            <span class="rounded-md bg-hotPink/15 px-2 py-0.5 text-[10px] text-hotPink">Materials</span>
+          </div>
+          <div id="kpi-cogs-spend" class="mt-2 font-display text-2xl sm:text-3xl font-black neon-text-pink">$0.00</div>
+          <p id="kpi-cogs-share" class="mt-1 text-xs text-gray-400">0% of total spend</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Operating Overhead</span>
+            <span class="rounded-md bg-arcadePurple/20 px-2 py-0.5 text-[10px] text-purple-300">Ops &amp; Booths</span>
+          </div>
+          <div id="kpi-overhead-spend" class="mt-2 font-display text-2xl sm:text-3xl font-black neon-text-cyan">$0.00</div>
+          <p id="kpi-overhead-share" class="mt-1 text-xs text-gray-400">0% of total spend</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal border border-white/15 p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Receipt Audit Vault</span>
+            <span class="rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] text-emerald-300">Schedule C</span>
+          </div>
+          <div id="kpi-receipt-coverage" class="mt-2 font-display text-2xl sm:text-3xl font-black text-emerald-300">0%</div>
+          <p id="kpi-receipt-count-text" class="mt-1 text-xs text-gray-400">0 of 0 entries have receipts</p>
+        </div>
+      </div>
+
+      <!-- Receipt OCR Dropzone + Expense Entry Form -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 5 Cols: Receipt Dropzone & Automated OCR Scanner -->
+        <div class="lg:col-span-5 rounded-2xl bg-charcoal arcade-frame-pink p-5 sm:p-6 shadow-cardDark flex flex-col justify-between space-y-5">
           <div>
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-widest neon-text-pink">Smart Receipt Scanner</span>
+                <h2 class="text-lg font-extrabold text-white mt-0.5">Drop Receipt &amp; Auto-Fill OCR</h2>
+              </div>
+              <span class="rounded-lg border border-hotPink/40 bg-hotPink/10 px-2.5 py-1 text-[11px] font-mono text-hotPink">
+                OCR READY
+              </span>
+            </div>
+
+            <!-- Interactive Drag & Drop Zone -->
+            <div
+              id="receipt-dropzone"
+              tabindex="0"
+              role="button"
+              aria-label="Drop receipt image or PDF here, or click to upload"
+              class="mt-4 group relative cursor-pointer rounded-2xl border-2 border-dashed border-neonCyan/45 hover:border-hotPink bg-obsidian/80 p-6 text-center transition-all focus:outline-none focus:ring-2 focus:ring-hotPink"
+            >
+              <input
+                id="receipt-file-input"
+                type="file"
+                accept="image/*,.pdf"
+                class="hidden"
+              />
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-neonCyan/10 text-neonCyan group-hover:bg-hotPink/15 group-hover:text-hotPink transition">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              </div>
+              <p class="mt-3 text-sm font-bold text-white">
+                Drag &amp; drop receipt photo or PDF here
+              </p>
+              <p class="mt-1 text-xs text-gray-400">
+                Or <span class="text-neonCyan underline font-semibold">browse files</span> • Auto-extracts vendor, date, total &amp; COGS tag
+              </p>
+            </div>
+
+            <!-- OCR Status & Extracted Snippet -->
+            <div id="ocr-progress-banner" class="hidden mt-3 rounded-xl border border-neonCyan/40 bg-neonCyan/10 p-3 text-xs">
+              <div class="flex items-center justify-between font-bold text-neonCyan">
+                <span id="ocr-status-label">OCR Extraction Complete</span>
+                <span id="ocr-confidence-badge" class="rounded bg-black/50 px-2 py-0.5 font-mono text-[10px]">96% MATCH</span>
+              </div>
+              <p id="ocr-raw-snippet" class="mt-1.5 font-mono text-[11px] text-gray-300 line-clamp-2"></p>
+              <div class="mt-2 flex items-center gap-2">
+                <button
+                  id="btn-reapply-ocr"
+                  type="button"
+                  class="rounded-lg bg-neonCyan/20 hover:bg-neonCyan/30 px-2.5 py-1 text-[11px] font-bold text-neonCyan transition"
+                >
+                  Re-apply OCR Values
+                </button>
+              </div>
+            </div>
+
+            <!-- Attached Draft Receipt Chip -->
+            <div id="draft-receipt-chip" class="hidden mt-3 flex items-center justify-between rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-3.5 py-2.5 text-xs">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-400"></span>
+                <span id="draft-receipt-filename" class="truncate font-semibold text-emerald-200">receipt.jpg</span>
+              </div>
+              <button
+                id="btn-clear-draft-receipt"
+                type="button"
+                class="ml-2 shrink-0 text-[11px] font-bold text-rose-300 hover:text-rose-200"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+
+          <!-- Sample Receipt Preset Selector -->
+          <div class="border-t border-white/10 pt-4">
             <label for="sample-receipt-preset" class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
               Sample Receipt Profiles (Instant Test)
             </label>
@@ -450,7 +605,7 @@
                 class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-xs text-gray-200 outline-none"
               >
                 <option value="filament">Bambu Lab — Matte PLA &amp; PETG Filament ($118.40 • COGS)</option>
-                <option value="velvet">Crushed Velvet &amp; Neodymium Magnets ($84.95 • COGS)</option>
+                <option value="velvet">Trims &amp; Hardware — Magnets &amp; Hinges ($84.95 • COGS)</option>
                 <option value="con">ComicCon Dealer Table &amp; Banner Deposit ($375.00 • Overhead)</option>
                 <option value="resin">Siraya Tech Fast Resin &amp; IPA Wash ($72.50 • COGS)</option>
               </select>
@@ -463,7 +618,69 @@
               </button>
             </div>
           </div>
-<!-- ... existing code ... -->
+        </div>
+
+        <!-- Right 7 Cols: Purchase & Expense Entry Form -->
+        <div class="lg:col-span-7 rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-cardDark">
+          <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-3.5">
+            <div>
+              <span id="form-mode-badge" class="text-[11px] font-bold uppercase tracking-widest neon-text-cyan">New Business Purchase</span>
+              <h2 id="form-heading" class="text-lg font-extrabold text-white mt-0.5">Log Bonus Action Expense</h2>
+            </div>
+            <button
+              id="btn-cancel-edit"
+              type="button"
+              class="hidden rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-semibold text-gray-300"
+            >
+              Cancel Edit
+            </button>
+          </div>
+
+          <form id="expense-form" class="mt-4 space-y-4">
+            <input type="hidden" id="expense-edit-id" value="" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label for="expense-date" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Purchase Date *
+                </label>
+                <input
+                  id="expense-date"
+                  type="date"
+                  required
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label for="expense-vendor" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Vendor / Merchant *
+                </label>
+                <input
+                  id="expense-vendor"
+                  type="text"
+                  required
+                  placeholder="e.g., Bambu Lab, Joann, Uline"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label for="expense-amount" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Total Amount ($) *
+                </label>
+                <input
+                  id="expense-amount"
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  required
+                  placeholder="0.00"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-hotPink px-3.5 py-2.5 text-sm font-mono font-bold text-white placeholder-gray-500 outline-none transition"
+                />
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="expense-category" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
@@ -490,7 +707,105 @@
                   <option value="Other">Other</option>
                 </select>
               </div>
-<!-- ... existing code ... -->
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Cost Classification (Profit Prep) *
+                </label>
+                <div class="grid grid-cols-2 gap-2" role="group" aria-label="Cost Classification">
+                  <button
+                    type="button"
+                    id="cost-type-cogs-btn"
+                    data-cost-type="COGS"
+                    class="cost-type-toggle rounded-xl py-2.5 px-3 text-xs font-extrabold uppercase tracking-wider border border-hotPink bg-hotPink/20 text-white shadow-pinkGlow transition"
+                  >
+                    COGS (Direct)
+                  </button>
+                  <button
+                    type="button"
+                    id="cost-type-overhead-btn"
+                    data-cost-type="Overhead"
+                    class="cost-type-toggle rounded-xl py-2.5 px-3 text-xs font-extrabold uppercase tracking-wider border border-white/15 bg-obsidian text-gray-400 hover:text-neonCyan transition"
+                  >
+                    Overhead (Ops)
+                  </button>
+                </div>
+                <input type="hidden" id="expense-cost-type" value="COGS" />
+              </div>
+            </div>
+
+            <div>
+              <label for="expense-notes" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Item Details / Product Line Notes
+              </label>
+              <input
+                id="expense-notes"
+                type="text"
+                placeholder="e.g., 4x Matte Black PLA + Crushed Velvet for The Long Rest batch"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition"
+              />
+            </div>
+
+            <div class="pt-1 flex flex-wrap items-center justify-between gap-3">
+              <p class="text-[11px] text-gray-400">
+                Auto-tagged for Schedule C reporting &amp; future per-unit margin tracking.
+              </p>
+              <button
+                id="btn-submit-expense"
+                type="submit"
+                class="neon-btn-pink rounded-xl px-6 py-2.5 text-sm font-extrabold uppercase tracking-wider"
+              >
+                + Record Expense
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Spending Analytics: Category Breakdown & Monthly Spend -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-6 rounded-2xl bg-charcoal border border-white/15 p-5 sm:p-6 shadow-cardDark">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-widest neon-text-pink">Category Telemetry</span>
+              <h3 class="text-base font-extrabold text-white">Spend by Craft &amp; Ops Category</h3>
+            </div>
+            <span class="text-xs text-gray-400">Sorted by highest spend</span>
+          </div>
+          <div id="category-breakdown-list" class="space-y-3"></div>
+        </div>
+
+        <div class="lg:col-span-6 rounded-2xl bg-charcoal border border-white/15 p-5 sm:p-6 shadow-cardDark">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-widest neon-text-cyan">Monthly Burn Rate</span>
+              <h3 class="text-base font-extrabold text-white">Monthly COGS vs. Overhead</h3>
+            </div>
+            <select
+              id="tax-year-select"
+              aria-label="Select Year"
+              class="rounded-lg bg-obsidian border border-white/15 px-2.5 py-1 text-xs font-mono text-neonCyan outline-none"
+            ></select>
+          </div>
+          <div id="monthly-bars-container" class="space-y-2.5"></div>
+        </div>
+      </div>
+
+      <!-- Expense Ledger Table & Filters -->
+      <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-cardDark">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-widest neon-text-cyan">Audit-Ready Ledger</span>
+            <h3 class="text-lg font-extrabold text-white">Bonus Action Expense History</h3>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <input
+              id="filter-search"
+              type="search"
+              placeholder="Search vendor or notes..."
+              class="rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-xs text-white placeholder-gray-500 outline-none"
+            />
             <select
               id="filter-category"
               aria-label="Filter by Category"
@@ -560,10 +875,209 @@
     <!-- TAB 3: INVENTORY (INTERACTIVE & LINKED TO PRODUCTS & ORDERS)          -->
     <!-- ===================================================================== -->
     <section id="view-inventory" class="tab-view hidden space-y-6">
-<!-- ... existing code ... -->
+      <!-- Inventory KPI Bar -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Total Units On-Hand</span>
+            <span class="rounded-md bg-neonCyan/10 px-2 py-0.5 text-[10px] text-neonCyan">Ready Stock</span>
+          </div>
+          <div id="inv-kpi-units" class="mt-2 font-display text-2xl sm:text-3xl font-black text-white">0</div>
+          <p class="mt-1 text-xs text-gray-400">Physical units across all bins</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal arcade-frame-pink p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Inventory COGS Value</span>
+            <span class="rounded-md bg-hotPink/15 px-2 py-0.5 text-[10px] text-hotPink">Cost Basis</span>
+          </div>
+          <div id="inv-kpi-cogs-value" class="mt-2 font-display text-2xl sm:text-3xl font-black neon-text-pink">$0.00</div>
+          <p class="mt-1 text-xs text-gray-400">On-Hand × Est. Unit COGS</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Potential Retail Value</span>
+            <span class="rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] text-emerald-300">Booth Ready</span>
+          </div>
+          <div id="inv-kpi-retail-value" class="mt-2 font-display text-2xl sm:text-3xl font-black neon-text-cyan">$0.00</div>
+          <p class="mt-1 text-xs text-gray-400">On-Hand × Catalog Sell Price</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal border border-amber-400/35 p-4 sm:p-5 shadow-cardDark">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-400">
+            <span>Low / Out of Stock</span>
+            <span class="rounded-md bg-amber-500/15 px-2 py-0.5 text-[10px] text-amber-300">Alerts</span>
+          </div>
+          <div id="inv-kpi-low-count" class="mt-2 font-display text-2xl sm:text-3xl font-black text-amber-300">0</div>
+          <p id="inv-kpi-low-sub" class="mt-1 text-xs text-gray-400">All tracked SKUs healthy</p>
+        </div>
+      </div>
+
+      <!-- Stock Adjustment Form + Recent Movement Log -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-cardDark">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-widest neon-text-cyan">Catalog-Linked Stock Control</span>
+              <h2 class="text-lg font-extrabold text-white mt-0.5">Adjust Stock, Log Print Runs &amp; Set Thresholds</h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                id="btn-sync-catalog-inventory"
+                type="button"
+                class="rounded-xl bg-neonCyan/15 hover:bg-neonCyan/25 border border-neonCyan/45 px-3 py-1.5 text-xs font-bold text-neonCyan transition"
+              >
+                Sync All Catalog Items
+              </button>
+              <button
+                id="btn-export-inventory-csv"
+                type="button"
+                class="rounded-xl bg-surface hover:bg-white/10 border border-white/15 px-3 py-1.5 text-xs font-bold text-gray-200 transition"
+              >
+                Inventory CSV
+              </button>
+            </div>
+          </div>
+
+          <form id="inventory-adjust-form" class="mt-4 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="inv-product-select" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Catalog Product *
+                </label>
+                <select
+                  id="inv-product-select"
+                  required
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white outline-none"
+                ></select>
+              </div>
+
+              <div>
+                <label for="inv-action-type" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Adjustment Type *
+                </label>
+                <select
+                  id="inv-action-type"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-hotPink px-3.5 py-2.5 text-sm text-white outline-none"
+                >
+                  <option value="add">+ Add Stock (Print Batch / Restock)</option>
+                  <option value="set">= Set Exact On-Hand Count</option>
+                  <option value="remove">− Deduct Stock (Booth Pull / Misprint)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label for="inv-qty-input" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Quantity *
+                </label>
+                <input
+                  id="inv-qty-input"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value="1"
+                  required
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm font-mono font-bold text-white outline-none"
+                />
+              </div>
+
+              <div>
+                <label for="inv-reorder-input" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Low-Stock Alert At
+                </label>
+                <input
+                  id="inv-reorder-input"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="3"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-amber-400 px-3.5 py-2.5 text-sm font-mono text-white placeholder-gray-500 outline-none"
+                />
+              </div>
+
+              <div>
+                <label for="inv-location-input" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Bin / Shelf Location
+                </label>
+                <input
+                  id="inv-location-input"
+                  type="text"
+                  placeholder="e.g., Shelf A1 / Con Tote 2"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input
+                id="inv-notes-input"
+                type="text"
+                placeholder="Optional note (e.g., Weekend print batch finished, ComicCon booth tote)"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
+              />
+              <button
+                type="submit"
+                class="shrink-0 neon-btn-pink rounded-xl px-6 py-2.5 text-xs font-extrabold uppercase tracking-wider"
+              >
+                Update Stock
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right 5 Cols: Recent Inventory Movements -->
+        <div class="lg:col-span-5 rounded-2xl bg-charcoal arcade-frame-pink p-5 sm:p-6 shadow-cardDark flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-widest neon-text-pink">Stock Telemetry</span>
+                <h3 class="text-base font-extrabold text-white mt-0.5">Recent Stock Movements</h3>
+              </div>
+              <span id="inv-log-count" class="text-xs font-mono text-gray-400">0 events</span>
+            </div>
+            <div id="inv-logs-list" class="mt-3 space-y-2.5 max-h-[260px] overflow-y-auto pr-1"></div>
+          </div>
+          <p class="mt-3 text-[11px] text-gray-400">
+            Open/unfulfilled orders automatically reserve stock; completed or shipped orders deduct on-hand inventory.
+          </p>
+        </div>
+      </div>
+
       <!-- Inventory Stock Table with Search & Status Filters -->
       <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-cardDark">
-<!-- ... existing code ... -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-widest neon-text-cyan">Live Stock Matrix</span>
+            <h3 class="text-lg font-extrabold text-white">Product Inventory &amp; Availability</h3>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <input
+              id="inv-filter-search"
+              type="search"
+              placeholder="Search product, SKU, bin..."
+              class="rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-xs text-white placeholder-gray-500 outline-none"
+            />
+            <select
+              id="inv-filter-status"
+              class="rounded-xl bg-obsidian border border-white/15 focus:border-hotPink px-3 py-2 text-xs text-white outline-none"
+            >
+              <option value="ALL">All Stock Statuses</option>
+              <option value="IN_STOCK">In Stock Only</option>
+              <option value="LOW_STOCK">Low Stock Only</option>
+              <option value="OUT_OF_STOCK">Out of Stock Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-3 text-xs text-gray-400">
+          <span id="inv-showing-count">Showing 0 inventory items</span>
+          <span>Available = On-Hand − Reserved by Open Orders</span>
+        </div>
+
         <div class="overflow-x-auto rounded-xl border border-white/10 bg-obsidian/70">
           <table class="w-full text-left border-collapse min-w-[980px]">
             <thead>
@@ -588,7 +1102,242 @@
     <!-- TAB 4: ORDERS (CONNECTED TO PRODUCTS CATALOG)                         -->
     <!-- ===================================================================== -->
     <section id="view-orders" class="tab-view hidden space-y-6">
-<!-- ... existing code ... -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 7 Cols: Build Customer Order From Product Catalog -->
+        <div class="lg:col-span-7 rounded-2xl bg-charcoal arcade-frame-pink p-5 sm:p-6 shadow-cardDark">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-widest neon-text-pink">Catalog-Connected Order Entry</span>
+              <h2 class="text-lg font-extrabold text-white mt-0.5">Log Customer Order</h2>
+            </div>
+            <button
+              type="button"
+              data-jump-tab="products"
+              class="rounded-xl bg-neonCyan/15 hover:bg-neonCyan/25 border border-neonCyan/45 px-3 py-1.5 text-xs font-bold text-neonCyan transition"
+            >
+              + Add Product to Catalog
+            </button>
+          </div>
+
+          <!-- Line Item Selector -->
+          <div class="mt-4 rounded-xl bg-obsidian/90 border border-white/10 p-4 space-y-3">
+            <div class="text-xs font-bold uppercase tracking-wider text-neonCyan">1. Select Item From Product Catalog</div>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              <div class="sm:col-span-5">
+                <label for="order-product-select" class="block text-[11px] font-bold uppercase text-gray-400 mb-1">
+                  Product *
+                </label>
+                <select
+                  id="order-product-select"
+                  class="w-full rounded-xl bg-charcoal border border-white/15 focus:border-neonCyan px-3 py-2 text-xs text-white outline-none"
+                ></select>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label for="order-variant-input" class="block text-[11px] font-bold uppercase text-gray-400 mb-1">
+                  Trim / Size / Option
+                </label>
+                <input
+                  id="order-variant-input"
+                  type="text"
+                  placeholder="e.g., Gojira / XL"
+                  class="w-full rounded-xl bg-charcoal border border-white/15 focus:border-neonCyan px-3 py-2 text-xs text-white placeholder-gray-500 outline-none"
+                />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label for="order-qty-input" class="block text-[11px] font-bold uppercase text-gray-400 mb-1">
+                  Qty
+                </label>
+                <input
+                  id="order-qty-input"
+                  type="number"
+                  min="1"
+                  value="1"
+                  class="w-full rounded-xl bg-charcoal border border-white/15 focus:border-neonCyan px-3 py-2 text-xs font-mono font-bold text-white outline-none"
+                />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label for="order-unit-price-input" class="block text-[11px] font-bold uppercase text-gray-400 mb-1">
+                  Price ($)
+                </label>
+                <input
+                  id="order-unit-price-input"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  class="w-full rounded-xl bg-charcoal border border-white/15 focus:border-hotPink px-3 py-2 text-xs font-mono font-bold text-white outline-none"
+                />
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                id="btn-add-order-line"
+                type="button"
+                class="neon-btn-cyan rounded-xl px-4 py-2 text-xs font-extrabold uppercase tracking-wider"
+              >
+                + Add Item to Order
+              </button>
+            </div>
+          </div>
+
+          <!-- Customer & Order Metadata Form -->
+          <form id="order-form" class="mt-4 space-y-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-hotPink">2. Customer &amp; Fulfillment Details</div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label for="order-date" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Order Date *
+                </label>
+                <input
+                  id="order-date"
+                  type="date"
+                  required
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-sm text-white outline-none"
+                />
+              </div>
+
+              <div>
+                <label for="order-customer" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Customer Name / Handle *
+                </label>
+                <input
+                  id="order-customer"
+                  type="text"
+                  required
+                  placeholder="e.g., Alex Mercer / @alexrolls"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-sm text-white placeholder-gray-500 outline-none"
+                />
+              </div>
+
+              <div>
+                <label for="order-channel" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Sales Channel
+                </label>
+                <select
+                  id="order-channel"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-sm text-white outline-none"
+                >
+                  <option value="ComicCon Booth">ComicCon Booth</option>
+                  <option value="Jotform Online">Jotform Online</option>
+                  <option value="Direct Email / Custom">Direct Email / Custom</option>
+                  <option value="Local Gaming Store">Local Gaming Store</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label for="order-payment" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Payment Method
+                </label>
+                <select
+                  id="order-payment"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-sm text-white outline-none"
+                >
+                  <option value="Venmo">Venmo</option>
+                  <option value="Cash">Cash</option>
+                  <option value="Square / Card">Square / Card</option>
+                  <option value="PayPal / Zelle">PayPal / Zelle</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="order-status" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Order Status
+                </label>
+                <select
+                  id="order-status"
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-hotPink px-3 py-2 text-sm text-white outline-none"
+                >
+                  <option value="Paid - Pending Build">Paid - Pending Build</option>
+                  <option value="In Production">In Production</option>
+                  <option value="Shipped">Shipped</option>
+                  <option value="Completed / Picked Up">Completed / Picked Up</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="order-notes" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Shipping / Custom Notes
+                </label>
+                <input
+                  id="order-notes"
+                  type="text"
+                  placeholder="Venmo TXN, shipping city, custom colors..."
+                  class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-sm text-white placeholder-gray-500 outline-none"
+                />
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <label class="inline-flex items-center gap-2 text-xs text-gray-300 cursor-pointer">
+                <input
+                  id="order-auto-deduct"
+                  type="checkbox"
+                  checked
+                  class="h-4 w-4 rounded border-white/20 bg-obsidian text-hotPink focus:ring-hotPink"
+                />
+                <span>Auto-deduct inventory when status is <strong class="text-neonCyan">Shipped</strong> or <strong class="text-emerald-300">Completed</strong></span>
+              </label>
+
+              <button
+                type="submit"
+                class="neon-btn-pink rounded-xl px-6 py-2.5 text-sm font-extrabold uppercase tracking-wider"
+              >
+                + Complete &amp; Save Order
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right 5 Cols: Active Order Cart / Line Items Summary -->
+        <div class="lg:col-span-5 rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-cardDark flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-widest neon-text-cyan">Current Order Cart</span>
+                <h3 class="text-lg font-extrabold text-white mt-0.5">Selected Line Items</h3>
+              </div>
+              <span class="text-xs text-gray-400">Auto-priced from catalog</span>
+            </div>
+
+            <div class="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-obsidian/70">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-white/10 bg-white/[0.03] text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    <th class="py-2.5 px-3">Item</th>
+                    <th class="py-2.5 px-2 text-center">Qty</th>
+                    <th class="py-2.5 px-3 text-right">Subtotal</th>
+                    <th class="py-2.5 px-2"></th>
+                  </tr>
+                </thead>
+                <tbody id="order-staged-lines-body" class="divide-y divide-white/5 text-xs"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-obsidian border border-white/10 p-4 space-y-2 text-sm">
+            <div class="flex justify-between text-gray-400">
+              <span>Estimated Unit COGS:</span>
+              <span id="order-staged-cogs" class="font-mono font-semibold text-gray-200">$0.00</span>
+            </div>
+            <div class="flex justify-between text-gray-400">
+              <span>Estimated Gross Profit:</span>
+              <span id="order-staged-profit" class="font-mono font-bold text-emerald-300">$0.00</span>
+            </div>
+            <div class="flex justify-between border-t border-white/10 pt-2 text-base font-extrabold text-white">
+              <span>Order Total:</span>
+              <span id="order-staged-total" class="font-display neon-text-pink">$0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Orders Ledger Table -->
       <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-cardDark">
         <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -623,7 +1372,232 @@
     <!-- TAB 5: PRODUCT CATALOG (FULL INTERACTIVE CATALOG)                     -->
     <!-- ===================================================================== -->
     <section id="view-products" class="tab-view hidden space-y-6">
-<!-- ... existing code ... -->
+      <!-- Catalog KPIs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-4 sm:p-5 shadow-cardDark">
+          <div class="text-xs font-bold uppercase tracking-wider text-gray-400">Total Catalog SKUs</div>
+          <div id="prod-kpi-total" class="mt-2 font-display text-2xl sm:text-3xl font-black text-white">0</div>
+          <p class="mt-1 text-xs text-gray-400">Available for order entry</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal arcade-frame-pink p-4 sm:p-5 shadow-cardDark">
+          <div class="text-xs font-bold uppercase tracking-wider text-gray-400">Active / Made-to-Order</div>
+          <div id="prod-kpi-active" class="mt-2 font-display text-2xl sm:text-3xl font-black neon-text-pink">0</div>
+          <p class="mt-1 text-xs text-gray-400">Ready to sell at booth/online</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-4 sm:p-5 shadow-cardDark">
+          <div class="text-xs font-bold uppercase tracking-wider text-gray-400">Avg. Sell Price</div>
+          <div id="prod-kpi-avg-price" class="mt-2 font-display text-2xl sm:text-3xl font-black neon-text-cyan">$0.00</div>
+          <p class="mt-1 text-xs text-gray-400">Across catalog listings</p>
+        </div>
+
+        <div class="rounded-2xl bg-charcoal border border-emerald-400/35 p-4 sm:p-5 shadow-cardDark">
+          <div class="text-xs font-bold uppercase tracking-wider text-gray-400">Avg. Gross Margin</div>
+          <div id="prod-kpi-avg-margin" class="mt-2 font-display text-2xl sm:text-3xl font-black text-emerald-300">0%</div>
+          <p class="mt-1 text-xs text-gray-400">Sell Price minus Est. COGS</p>
+        </div>
+      </div>
+
+      <!-- Product Entry / Edit Form -->
+      <div class="rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-cardDark">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3.5">
+          <div>
+            <span id="product-form-mode-badge" class="text-[11px] font-bold uppercase tracking-widest neon-text-cyan">New Catalog Item</span>
+            <h2 id="product-form-heading" class="text-lg font-extrabold text-white mt-0.5">Add Bonus Action Product</h2>
+          </div>
+          <button
+            id="btn-cancel-product-edit"
+            type="button"
+            class="hidden rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-semibold text-gray-300"
+          >
+            Cancel Edit
+          </button>
+        </div>
+
+        <form id="product-form" class="mt-4 space-y-4">
+          <input type="hidden" id="product-edit-id" value="" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label for="product-name" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Product Name *
+              </label>
+              <input
+                id="product-name"
+                type="text"
+                required
+                placeholder="e.g., The Long Rest, Cosplay Blaster"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
+              />
+            </div>
+
+            <div>
+              <label for="product-type" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Product Type *
+              </label>
+              <select
+                id="product-type"
+                required
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white outline-none"
+              >
+                <option value="Dice Tower / Box">Dice Tower / Box</option>
+                <option value="Cosplay Prop">Cosplay Prop</option>
+                <option value="Figurine / Miniature">Figurine / Miniature</option>
+                <option value="Shirt">Shirt</option>
+                <option value="Hoodie">Hoodie</option>
+                <option value="Trim / Add-On">Trim / Add-On</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="product-sku" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                SKU / Item Code
+              </label>
+              <input
+                id="product-sku"
+                type="text"
+                placeholder="Auto-generated if blank"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm font-mono uppercase text-white placeholder-gray-500 outline-none"
+              />
+            </div>
+
+            <div>
+              <label for="product-status" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Catalog Status
+              </label>
+              <select
+                id="product-status"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-hotPink px-3.5 py-2.5 text-sm text-white outline-none"
+              >
+                <option value="Active">Active</option>
+                <option value="Made-to-Order">Made-to-Order</option>
+                <option value="Discontinued">Discontinued</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+            <div class="sm:col-span-3">
+              <label for="product-sell-price" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Sell Price ($) *
+              </label>
+              <input
+                id="product-sell-price"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                placeholder="0.00"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-hotPink px-3.5 py-2.5 text-sm font-mono font-bold text-white placeholder-gray-500 outline-none"
+              />
+            </div>
+
+            <div class="sm:col-span-3">
+              <label for="product-unit-cogs" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Est. Unit COGS ($)
+              </label>
+              <input
+                id="product-unit-cogs"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm font-mono text-white placeholder-gray-500 outline-none"
+              />
+            </div>
+
+            <div class="sm:col-span-6">
+              <label for="product-variants" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Variants / Trims / Sizes
+              </label>
+              <input
+                id="product-variants"
+                type="text"
+                placeholder="e.g., S, M, L, XL • or Gojira, Reactor 4, The Omen"
+                class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="product-description" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+              Short Product Description
+            </label>
+            <input
+              id="product-description"
+              type="text"
+              placeholder="Punchy customer-facing summary of dimensions, hardware, or materials..."
+              class="w-full rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3.5 py-2.5 text-sm text-white placeholder-gray-500 outline-none"
+            />
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div class="flex items-center gap-4 text-xs">
+              <span class="text-gray-400">
+                Unit Profit: <strong id="product-live-profit-preview" class="font-mono text-emerald-300">$0.00</strong>
+              </span>
+              <span class="text-gray-400">
+                Gross Margin: <strong id="product-live-margin-preview" class="font-mono text-neonCyan">0%</strong>
+              </span>
+            </div>
+
+            <button
+              id="btn-submit-product"
+              type="submit"
+              class="neon-btn-pink rounded-xl px-6 py-2.5 text-sm font-extrabold uppercase tracking-wider"
+            >
+              + Save Product to Catalog
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Product Catalog Table & Filters -->
+      <div class="rounded-2xl bg-charcoal arcade-frame-pink p-5 sm:p-6 shadow-cardDark">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-widest neon-text-pink">Master Product Lineup</span>
+            <h3 class="text-lg font-extrabold text-white">Bonus Action Catalog</h3>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <input
+              id="prod-filter-search"
+              type="search"
+              placeholder="Search name, SKU, variants..."
+              class="rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-xs text-white placeholder-gray-500 outline-none"
+            />
+            <select
+              id="prod-filter-type"
+              class="rounded-xl bg-obsidian border border-white/15 focus:border-neonCyan px-3 py-2 text-xs text-white outline-none"
+            >
+              <option value="ALL">All Product Types</option>
+              <option value="Dice Tower / Box">Dice Tower / Box</option>
+              <option value="Cosplay Prop">Cosplay Prop</option>
+              <option value="Figurine / Miniature">Figurine / Miniature</option>
+              <option value="Shirt">Shirt</option>
+              <option value="Hoodie">Hoodie</option>
+              <option value="Trim / Add-On">Trim / Add-On</option>
+              <option value="Other">Other</option>
+            </select>
+            <select
+              id="prod-filter-status"
+              class="rounded-xl bg-obsidian border border-white/15 focus:border-hotPink px-3 py-2 text-xs text-white outline-none"
+            >
+              <option value="ALL">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Made-to-Order">Made-to-Order</option>
+              <option value="Discontinued">Discontinued</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3 text-xs text-gray-400">
+          <span id="product-showing-count">Showing 0 products</span>
+        </div>
+
         <div class="overflow-x-auto rounded-xl border border-white/10 bg-obsidian/70">
           <table class="w-full text-left border-collapse min-w-[920px]">
             <thead>
@@ -644,6 +1618,63 @@
       </div>
     </section>
   </main>
+
+  <!-- Receipt Viewer Modal -->
+  <div
+    id="receipt-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-2xl rounded-2xl bg-charcoal arcade-frame-cyan p-5 sm:p-6 shadow-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
+        <div>
+          <h3 id="receipt-modal-title" class="text-lg font-extrabold text-white">Receipt Preview</h3>
+          <p id="receipt-modal-meta" class="text-xs text-gray-400 mt-0.5"></p>
+        </div>
+        <button
+          id="btn-close-receipt-modal"
+          type="button"
+          class="rounded-xl bg-white/10 hover:bg-hotPink px-3 py-1.5 text-xs font-bold text-white transition"
+        >
+          Close
+        </button>
+      </div>
+      <div id="receipt-modal-body" class="mt-4 max-h-[70vh] overflow-auto rounded-xl bg-obsidian p-4 flex items-center justify-center"></div>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation Modal (Replaces window.confirm) -->
+  <div
+    id="confirm-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="w-full max-w-md rounded-2xl bg-charcoal arcade-frame-pink p-6 shadow-2xl">
+      <h3 id="confirm-modal-title" class="text-lg font-extrabold text-white">Confirm Action</h3>
+      <p id="confirm-modal-message" class="mt-2 text-sm text-gray-300 leading-relaxed"></p>
+      <div class="mt-5 flex justify-end gap-2.5">
+        <button
+          id="btn-confirm-cancel"
+          type="button"
+          class="rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-4 py-2 text-xs font-bold text-gray-300"
+        >
+          Cancel
+        </button>
+        <button
+          id="btn-confirm-proceed"
+          type="button"
+          class="neon-btn-pink rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack -->
+  <div id="toast-stack" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
 
   <script>
     (function () {
@@ -695,20 +1726,53 @@
         'Other',
       ];
 
+      function getTodayIsoDate() {
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      function getMonthOffsetIso(monthsAgo, dayOfMonth) {
+        const d = new Date();
+        d.setDate(1);
+        d.setMonth(d.getMonth() - monthsAgo);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(dayOfMonth).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      function createSampleReceiptSvgDataUrl(vendor, date, itemLine, totalStr, tagLine) {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="420" height="520" viewBox="0 0 420 520">
+          <rect width="420" height="520" rx="16" fill="#0d111a" stroke="#00f5ff" stroke-width="2"/>
+          <text x="210" y="54" text-anchor="middle" fill="#00f5ff" font-family="monospace" font-size="20" font-weight="bold">${escapeXml(vendor)}</text>
+          <text x="210" y="80" text-anchor="middle" fill="#9ca3af" font-family="monospace" font-size="13">DATE: ${escapeXml(date)}</text>
+          <line x1="36" y1="104" x2="384" y2="104" stroke="#374151" stroke-dasharray="6 4"/>
+          <text x="36" y="148" fill="#f3f4f6" font-family="monospace" font-size="15">${escapeXml(itemLine)}</text>
+          <text x="36" y="182" fill="#9ca3af" font-family="monospace" font-size="13">${escapeXml(tagLine)}</text>
+          <line x1="36" y1="220" x2="384" y2="220" stroke="#374151" stroke-dasharray="6 4"/>
+          <text x="36" y="268" fill="#ff1493" font-family="monospace" font-size="22" font-weight="bold">TOTAL PAID: ${escapeXml(totalStr)}</text>
+          <text x="210" y="470" text-anchor="middle" fill="#6b7280" font-family="monospace" font-size="11">BONUS ACTION DIGITAL AUDIT RECEIPT</text>
+        </svg>`;
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      }
+
       const SAMPLE_EXPENSES = [
         {
           id: 'exp-sample-1',
-          date: '2026-10-12',
+          date: getMonthOffsetIso(2, 12),
           vendor: 'Bambu Lab Store',
-          amount: 118.40,
+          amount: 118.4,
           category: 'Filament & Resin',
           costType: 'COGS',
           notes: '4x Matte PLA spools (Obsidian Black, Neon Pink, Cyan) + PETG for Long Rest & One Shot vaults',
-          receiptName: 'bambulab-filament-1012.png',
+          receiptName: 'bambulab-filament.svg',
           receiptMime: 'image/svg+xml',
           receiptDataUrl: createSampleReceiptSvgDataUrl(
             'BAMBU LAB',
-            '2026-10-12',
+            getMonthOffsetIso(2, 12),
             '4x PLA/PETG Filament Spools',
             '$118.40',
             'COGS • Filament & Resin'
@@ -716,17 +1780,17 @@
         },
         {
           id: 'exp-sample-2',
-          date: '2026-10-18',
+          date: getMonthOffsetIso(1, 18),
           vendor: 'Fabric & Magnet Supply Co.',
           amount: 84.95,
           category: 'Accessories & Trim',
           costType: 'COGS',
           notes: 'Crushed velvet lining yardage (atomic blue, crimson, black) + N52 magnets & butler hinges',
-          receiptName: 'velvet-hardware-1018.png',
+          receiptName: 'velvet-hardware.svg',
           receiptMime: 'image/svg+xml',
           receiptDataUrl: createSampleReceiptSvgDataUrl(
             'VELVET & HARDWARE',
-            '2026-10-18',
+            getMonthOffsetIso(1, 18),
             'Velvet Lining + N52 Magnets',
             '$84.95',
             'COGS • Accessories & Trim'
@@ -734,17 +1798,17 @@
         },
         {
           id: 'exp-sample-3',
-          date: '2026-11-02',
+          date: getMonthOffsetIso(1, 24),
           vendor: 'ComicCon Dealer Hall',
-          amount: 375.00,
+          amount: 375.0,
           category: 'Convention',
           costType: 'Overhead',
           notes: 'Weekend dealer table reservation + power drop for 15-inch digital trim display',
-          receiptName: 'comiccon-booth-1102.png',
+          receiptName: 'comiccon-booth.svg',
           receiptMime: 'image/svg+xml',
           receiptDataUrl: createSampleReceiptSvgDataUrl(
             'COMICCON BOOTH',
-            '2026-11-02',
+            getMonthOffsetIso(1, 24),
             'Dealer Table + Power Drop',
             '$375.00',
             'Overhead • Convention'
@@ -752,17 +1816,17 @@
         },
         {
           id: 'exp-sample-4',
-          date: '2026-11-08',
+          date: getMonthOffsetIso(0, 6),
           vendor: 'StickerApp & Print Hub',
           amount: 64.25,
           category: 'Vinyl & Transfers',
           costType: 'Overhead',
           notes: 'Die-cut vinyl stickers (The Long Rest, The One Shot, Bonus Action) + DTF shirt transfers',
-          receiptName: 'stickerapp-print-1108.png',
+          receiptName: 'stickerapp-print.svg',
           receiptMime: 'image/svg+xml',
           receiptDataUrl: createSampleReceiptSvgDataUrl(
             'STICKERAPP PRINT',
-            '2026-11-08',
+            getMonthOffsetIso(0, 6),
             'Die-Cut Vinyl & Transfers',
             '$64.25',
             'Overhead • Vinyl & Transfers'
@@ -770,17 +1834,17 @@
         },
         {
           id: 'exp-sample-5',
-          date: '2026-11-15',
+          date: getMonthOffsetIso(0, 14),
           vendor: 'Siraya Tech Direct',
-          amount: 72.50,
+          amount: 72.5,
           category: 'Filament & Resin',
           costType: 'COGS',
           notes: 'Fast ABS-like resin + IPA wash for custom mini tokens and trim badges',
-          receiptName: 'siraya-resin-1115.png',
+          receiptName: 'siraya-resin.svg',
           receiptMime: 'image/svg+xml',
           receiptDataUrl: createSampleReceiptSvgDataUrl(
             'SIRAYA TECH',
-            '2026-11-15',
+            getMonthOffsetIso(0, 14),
             'Tough Resin & Wash Supplies',
             '$72.50',
             'COGS • Filament & Resin'
@@ -842,7 +1906,7 @@
       const SAMPLE_ORDERS = [
         {
           id: 'ord-sample-1',
-          date: '2026-11-16',
+          date: getMonthOffsetIso(1, 25),
           customer: 'Kaelen Vance',
           channel: 'ComicCon Booth',
           paymentMethod: 'Venmo',
@@ -854,7 +1918,7 @@
               productId: 'prod-long-rest',
               productName: 'The Long Rest',
               variant: 'Gojira',
-              qty: 1,
+              qty: 3,
               unitPrice: 75.0,
               unitCogs: 18.5,
             },
@@ -862,7 +1926,7 @@
         },
         {
           id: 'ord-sample-2',
-          date: '2026-11-19',
+          date: getMonthOffsetIso(0, 15),
           customer: 'Mina Solis',
           channel: 'Jotform Online',
           paymentMethod: 'Venmo',
@@ -874,7 +1938,7 @@
               productId: 'prod-one-shot',
               productName: 'The One Shot',
               variant: 'Custom Trim',
-              qty: 1,
+              qty: 2,
               unitPrice: 55.0,
               unitCogs: 12.25,
             },
@@ -882,7 +1946,7 @@
               productId: 'prod-custom-trim',
               productName: 'Custom Trim Upgrade',
               variant: 'Cyan / Black / Pink Velvet',
-              qty: 1,
+              qty: 2,
               unitPrice: 20.0,
               unitCogs: 3.5,
             },
@@ -1131,7 +2195,7 @@
         invLogCount: document.getElementById('inv-log-count'),
         invLogsList: document.getElementById('inv-logs-list'),
 
-        // Inventory & P&L Sync
+        // P&L Sync
         pnlLiveRevenue: document.getElementById('pnl-live-revenue'),
         pnlLiveCogs: document.getElementById('pnl-live-cogs'),
         pnlLiveOverhead: document.getElementById('pnl-live-overhead'),
@@ -1178,19 +2242,1741 @@
         };
         return map[category] || 'Line 22 — Supplies / Line 27a — Other Business Expenses';
       }
-<!-- ... existing code ... -->
-            state.expenses = importedExpenses
-              .filter((row) => row && typeof row === 'object')
-              .map((row, idx) => ({
-                id: String(row.id || `imp-${Date.now()}-${idx}`),
-                date: String(row.date || getTodayIsoDate()),
-                vendor: String(row.vendor || 'Imported Vendor'),
-                amount: Number.isFinite(Number(row.amount)) ? Number(Number(row.amount).toFixed(2)) : 0,
-                category: normalizeExpenseCategory(row.category),
-                costType: row.costType === 'Overhead' ? 'Overhead' : 'COGS',
-                notes: String(row.notes || ''),
-                receiptName: String(row.receiptName || ''),
-                receiptMime: String(row.receiptMime || ''),
-                receiptDataUrl: String(row.receiptDataUrl || ''),
-              }));
-<!-- ... existing code ... -->
+
+      function escapeHtml(str) {
+        return String(str ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function escapeXml(str) {
+        return escapeHtml(str);
+      }
+
+      function formatMoney(num) {
+        const val = Number(num) || 0;
+        const sign = val < 0 ? '-' : '';
+        return sign + '$' + Math.abs(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function showToast(message, variant = 'cyan') {
+        if (!dom.toastStack) return;
+        const el = document.createElement('div');
+        const borderClass =
+          variant === 'pink'
+            ? 'border-hotPink bg-charcoal text-white shadow-pinkGlow'
+            : variant === 'emerald'
+            ? 'border-emerald-400 bg-charcoal text-emerald-200'
+            : 'border-neonCyan bg-charcoal text-neonCyan shadow-cyanGlow';
+        el.className = `pointer-events-auto rounded-xl border px-4 py-3 text-xs font-bold tracking-wide transition-all ${borderClass}`;
+        el.textContent = message;
+        dom.toastStack.appendChild(el);
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(6px)';
+          setTimeout(() => el.remove(), 220);
+        }, 3000);
+      }
+
+      let pendingConfirmCallback = null;
+      function openConfirmModal(title, message, onProceed) {
+        if (!dom.confirmModal) return;
+        dom.confirmModalTitle.textContent = title;
+        dom.confirmModalMessage.textContent = message;
+        pendingConfirmCallback = onProceed;
+        dom.confirmModal.classList.remove('hidden');
+      }
+
+      function closeConfirmModal() {
+        if (!dom.confirmModal) return;
+        dom.confirmModal.classList.add('hidden');
+        pendingConfirmCallback = null;
+      }
+
+      // Persistence
+      function loadFromStorage() {
+        try {
+          const rawExp = localStorage.getItem(STORAGE_KEYS.expenses);
+          const rawProd = localStorage.getItem(STORAGE_KEYS.products);
+          const rawOrd = localStorage.getItem(STORAGE_KEYS.orders);
+          const rawInv = localStorage.getItem(STORAGE_KEYS.inventory);
+          const rawLogs = localStorage.getItem(STORAGE_KEYS.inventoryLogs);
+
+          state.expenses = rawExp
+            ? JSON.parse(rawExp).map((e) => ({ ...e, category: normalizeExpenseCategory(e.category) }))
+            : [...SAMPLE_EXPENSES];
+          state.products = rawProd ? JSON.parse(rawProd) : [...SAMPLE_PRODUCTS];
+          state.orders = rawOrd ? JSON.parse(rawOrd) : [...SAMPLE_ORDERS];
+          state.inventory = rawInv ? JSON.parse(rawInv) : [...SAMPLE_INVENTORY];
+          state.inventoryLogs = rawLogs
+            ? JSON.parse(rawLogs)
+            : [
+                {
+                  id: 'log-init-1',
+                  timestamp: getTodayIsoDate() + ' 09:00',
+                  productName: 'Starter Booth & Shelf Inventory',
+                  deltaText: 'SYNC',
+                  reason: 'Initialized starter stock for The Long Rest, The One Shot, Custom Trim & Tee',
+                },
+              ];
+          ensureInventoryRecordsForProducts();
+        } catch (err) {
+          console.error('Failed to read localStorage:', err);
+          state.expenses = [...SAMPLE_EXPENSES];
+          state.products = [...SAMPLE_PRODUCTS];
+          state.orders = [...SAMPLE_ORDERS];
+          state.inventory = [...SAMPLE_INVENTORY];
+          state.inventoryLogs = [];
+        }
+      }
+
+      function saveToStorage() {
+        try {
+          localStorage.setItem(STORAGE_KEYS.expenses, JSON.stringify(state.expenses));
+          localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(state.products));
+          localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify(state.orders));
+          localStorage.setItem(STORAGE_KEYS.inventory, JSON.stringify(state.inventory));
+          localStorage.setItem(STORAGE_KEYS.inventoryLogs, JSON.stringify(state.inventoryLogs.slice(0, 80)));
+        } catch (err) {
+          console.error('Failed to write localStorage:', err);
+          showToast('Storage quota warning — export a JSON backup now!', 'pink');
+        }
+      }
+
+      // Tab Switching
+      function switchTab(tabKey) {
+        state.activeTab = tabKey;
+        dom.tabViews.forEach((view) => {
+          if (view.id === `view-${tabKey}`) {
+            view.classList.remove('hidden');
+          } else {
+            view.classList.add('hidden');
+          }
+        });
+
+        dom.tabButtons.forEach((btn) => {
+          const isTarget = btn.getAttribute('data-tab') === tabKey;
+          if (isTarget) {
+            btn.className =
+              'nav-tab-btn active-tab shrink-0 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold tracking-wide flex items-center gap-2 transition bg-hotPink/15 text-white border border-hotPink shadow-pinkGlow';
+          } else {
+            btn.className =
+              'nav-tab-btn shrink-0 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold tracking-wide flex items-center gap-2 transition bg-surface/70 hover:bg-surface text-gray-300 hover:text-neonCyan border border-white/10';
+          }
+        });
+      }
+
+      // Cost Type Toggle
+      function setCostType(type) {
+        const normalized = type === 'Overhead' ? 'Overhead' : 'COGS';
+        dom.costTypeInput.value = normalized;
+        if (normalized === 'COGS') {
+          dom.costTypeCogsBtn.className =
+            'cost-type-toggle rounded-xl py-2.5 px-3 text-xs font-extrabold uppercase tracking-wider border border-hotPink bg-hotPink/20 text-white shadow-pinkGlow transition';
+          dom.costTypeOverheadBtn.className =
+            'cost-type-toggle rounded-xl py-2.5 px-3 text-xs font-extrabold uppercase tracking-wider border border-white/15 bg-obsidian text-gray-400 hover:text-neonCyan transition';
+        } else {
+          dom.costTypeOverheadBtn.className =
+            'cost-type-toggle rounded-xl py-2.5 px-3 text-xs font-extrabold uppercase tracking-wider border border-neonCyan bg-neonCyan/20 text-neonCyan shadow-cyanGlow transition';
+          dom.costTypeCogsBtn.className =
+            'cost-type-toggle rounded-xl py-2.5 px-3 text-xs font-extrabold uppercase tracking-wider border border-white/15 bg-obsidian text-gray-400 hover:text-hotPink transition';
+        }
+      }
+
+      // Receipt Dropzone & OCR Simulation / Extraction
+      function inferCategoryFromText(text) {
+        const t = text.toLowerCase();
+        if (t.includes('filament') || t.includes('pla') || t.includes('petg') || t.includes('resin') || t.includes('bambu') || t.includes('siraya')) {
+          return { category: 'Filament & Resin', costType: 'COGS' };
+        }
+        if (t.includes('velvet') || t.includes('lining') || t.includes('trim') || t.includes('fabric')) {
+          return { category: 'Accessories & Trim', costType: 'COGS' };
+        }
+        if (t.includes('magnet') || t.includes('hinge') || t.includes('screw') || t.includes('hardware')) {
+          return { category: 'Hardware', costType: 'COGS' };
+        }
+        if (t.includes('vinyl') || t.includes('transfer') || t.includes('sticker') || t.includes('dtf')) {
+          return { category: 'Vinyl & Transfers', costType: 'Overhead' };
+        }
+        if (t.includes('shirt') || t.includes('hoodie') || t.includes('apparel') || t.includes('blank')) {
+          return { category: 'Apparel', costType: 'COGS' };
+        }
+        if (t.includes('box') || t.includes('bubble') || t.includes('mailer') || t.includes('uline') || t.includes('packaging')) {
+          return { category: 'Packaging', costType: 'COGS' };
+        }
+        if (t.includes('comiccon') || t.includes('booth') || t.includes('convention') || t.includes('table')) {
+          return { category: 'Convention', costType: 'Overhead' };
+        }
+        if (t.includes('hotel') || t.includes('gas') || t.includes('flight') || t.includes('parking') || t.includes('travel')) {
+          return { category: 'Travel', costType: 'Overhead' };
+        }
+        if (t.includes('paint') || t.includes('primer') || t.includes('airbrush')) {
+          return { category: 'Paint', costType: 'COGS' };
+        }
+        if (t.includes('nozzle') || t.includes('plate') || t.includes('tool') || t.includes('clamp')) {
+          return { category: 'Tooling', costType: 'Overhead' };
+        }
+        if (t.includes('printer') || t.includes('ams') || t.includes('equipment')) {
+          return { category: 'Equipment', costType: 'Overhead' };
+        }
+        return { category: 'Other', costType: 'COGS' };
+      }
+
+      function applyOcrDataToForm(ocrObj) {
+        if (!ocrObj) return;
+        state.lastOcr = ocrObj;
+        if (ocrObj.date) dom.dateInput.value = ocrObj.date;
+        if (ocrObj.vendor) dom.vendorInput.value = ocrObj.vendor;
+        if (ocrObj.amount) dom.amountInput.value = ocrObj.amount;
+        if (ocrObj.category) dom.categorySelect.value = normalizeExpenseCategory(ocrObj.category);
+        if (ocrObj.costType) setCostType(ocrObj.costType);
+        if (ocrObj.notes) dom.notesInput.value = ocrObj.notes;
+
+        dom.ocrConfidenceBadge.textContent = ocrObj.confidence || 'OCR EXTRACTED';
+        dom.ocrRawSnippet.textContent = ocrObj.rawText || '';
+        dom.ocrProgressBanner.classList.remove('hidden');
+      }
+
+      function handleReceiptFile(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          const dataUrl = String(ev.target.result || '');
+          state.draftReceipt = {
+            name: file.name,
+            mime: file.type || 'application/octet-stream',
+            dataUrl,
+          };
+          dom.draftReceiptFilename.textContent = file.name;
+          dom.draftReceiptChip.classList.remove('hidden');
+
+          // Parse filename & metadata heuristics for instant OCR pre-fill
+          const cleanBase = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+          const inferred = inferCategoryFromText(cleanBase);
+          const amountMatch = cleanBase.match(/(\d+\.\d{2})/);
+          const dateMatch = cleanBase.match(/(20\d{2}-\d{2}-\d{2})/);
+
+          const extracted = {
+            vendor: cleanBase
+              .replace(/\d+\.\d{2}/g, '')
+              .replace(/20\d{2}-\d{2}-\d{2}/g, '')
+              .trim()
+              .replace(/\b\w/g, (c) => c.toUpperCase()) || 'Scanned Receipt Vendor',
+            date: dateMatch ? dateMatch[1] : getTodayIsoDate(),
+            amount: amountMatch ? amountMatch[1] : dom.amountInput.value || '',
+            category: inferred.category,
+            costType: inferred.costType,
+            notes: `Receipt attached: ${file.name}`,
+            rawText: `FILE: ${file.name} (${Math.max(1, Math.round(file.size / 1024))} KB) • Category inferred: ${inferred.category}`,
+            confidence: amountMatch ? '94% OCR MATCH' : '88% FILE PARSED',
+          };
+
+          applyOcrDataToForm(extracted);
+          showToast(`Receipt "${file.name}" attached & scanned!`, 'cyan');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function runSampleReceiptOcr(presetKey) {
+        const preset = OCR_PRESETS[presetKey] || OCR_PRESETS.filament;
+        const svgUrl = createSampleReceiptSvgDataUrl(
+          preset.vendor.toUpperCase(),
+          preset.date,
+          preset.notes.replace('OCR Parsed: ', '').slice(0, 34),
+          '$' + preset.amount,
+          `${preset.costType} • ${preset.category}`
+        );
+        state.draftReceipt = {
+          name: `sample-${presetKey}-${preset.date}.svg`,
+          mime: 'image/svg+xml',
+          dataUrl: svgUrl,
+        };
+        dom.draftReceiptFilename.textContent = state.draftReceipt.name;
+        dom.draftReceiptChip.classList.remove('hidden');
+        applyOcrDataToForm(preset);
+        showToast(`Sample OCR scan complete for ${preset.vendor}`, 'pink');
+      }
+
+      function clearDraftReceipt() {
+        state.draftReceipt = null;
+        dom.draftReceiptChip.classList.add('hidden');
+        dom.receiptFileInput.value = '';
+      }
+
+      // Expense Form Submit & Edit
+      function resetExpenseForm() {
+        dom.expenseForm.reset();
+        dom.editIdInput.value = '';
+        dom.dateInput.value = getTodayIsoDate();
+        dom.categorySelect.value = 'Filament & Resin';
+        setCostType('COGS');
+        dom.formModeBadge.textContent = 'New Business Purchase';
+        dom.formHeading.textContent = 'Log Bonus Action Expense';
+        dom.btnSubmitExpense.textContent = '+ Record Expense';
+        dom.btnCancelEdit.classList.add('hidden');
+        dom.ocrProgressBanner.classList.add('hidden');
+        clearDraftReceipt();
+      }
+
+      function handleExpenseFormSubmit(e) {
+        e.preventDefault();
+        const date = dom.dateInput.value || getTodayIsoDate();
+        const vendor = dom.vendorInput.value.trim();
+        const amount = Number.parseFloat(dom.amountInput.value);
+        const category = normalizeExpenseCategory(dom.categorySelect.value);
+        const costType = dom.costTypeInput.value === 'Overhead' ? 'Overhead' : 'COGS';
+        const notes = dom.notesInput.value.trim();
+
+        if (!vendor || !Number.isFinite(amount) || amount <= 0) {
+          showToast('Please enter a valid vendor and positive dollar amount.', 'pink');
+          return;
+        }
+
+        const editId = dom.editIdInput.value;
+        if (editId) {
+          const idx = state.expenses.findIndex((item) => item.id === editId);
+          if (idx !== -1) {
+            const existing = state.expenses[idx];
+            state.expenses[idx] = {
+              ...existing,
+              date,
+              vendor,
+              amount: Number(amount.toFixed(2)),
+              category,
+              costType,
+              notes,
+              receiptName: state.draftReceipt ? state.draftReceipt.name : existing.receiptName,
+              receiptMime: state.draftReceipt ? state.draftReceipt.mime : existing.receiptMime,
+              receiptDataUrl: state.draftReceipt ? state.draftReceipt.dataUrl : existing.receiptDataUrl,
+            };
+            showToast(`Updated expense: ${vendor} (${formatMoney(amount)})`, 'cyan');
+          }
+        } else {
+          state.expenses.unshift({
+            id: `exp-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            date,
+            vendor,
+            amount: Number(amount.toFixed(2)),
+            category,
+            costType,
+            notes,
+            receiptName: state.draftReceipt ? state.draftReceipt.name : '',
+            receiptMime: state.draftReceipt ? state.draftReceipt.mime : '',
+            receiptDataUrl: state.draftReceipt ? state.draftReceipt.dataUrl : '',
+          });
+          showToast(`Logged ${formatMoney(amount)} to ${category}`, 'emerald');
+        }
+
+        saveToStorage();
+        resetExpenseForm();
+        renderAll();
+      }
+
+      function startEditExpense(id) {
+        const exp = state.expenses.find((e) => e.id === id);
+        if (!exp) return;
+        switchTab('expenses');
+        dom.editIdInput.value = exp.id;
+        dom.dateInput.value = exp.date;
+        dom.vendorInput.value = exp.vendor;
+        dom.amountInput.value = exp.amount.toFixed(2);
+        dom.categorySelect.value = normalizeExpenseCategory(exp.category);
+        setCostType(exp.costType);
+        dom.notesInput.value = exp.notes || '';
+        dom.formModeBadge.textContent = 'Editing Ledger Entry';
+        dom.formHeading.textContent = `Edit: ${exp.vendor}`;
+        dom.btnSubmitExpense.textContent = 'Save Changes';
+        dom.btnCancelEdit.classList.remove('hidden');
+
+        if (exp.receiptName && exp.receiptDataUrl) {
+          state.draftReceipt = {
+            name: exp.receiptName,
+            mime: exp.receiptMime,
+            dataUrl: exp.receiptDataUrl,
+          };
+          dom.draftReceiptFilename.textContent = exp.receiptName;
+          dom.draftReceiptChip.classList.remove('hidden');
+        } else {
+          clearDraftReceipt();
+        }
+        dom.expenseForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function deleteExpense(id) {
+        const exp = state.expenses.find((e) => e.id === id);
+        if (!exp) return;
+        openConfirmModal(
+          'Delete Expense Entry?',
+          `Remove "${exp.vendor}" (${formatMoney(exp.amount)}) on ${exp.date} from your ledger?`,
+          () => {
+            state.expenses = state.expenses.filter((e) => e.id !== id);
+            saveToStorage();
+            renderAll();
+            showToast('Expense entry deleted.', 'pink');
+          }
+        );
+      }
+
+      function openReceiptModal(id) {
+        const exp = state.expenses.find((e) => e.id === id);
+        if (!exp || !exp.receiptDataUrl) return;
+        dom.receiptModalTitle.textContent = `${exp.vendor} • ${formatMoney(exp.amount)}`;
+        dom.receiptModalMeta.textContent = `${exp.date} • ${exp.category} (${exp.costType}) • ${exp.receiptName || 'Attached Receipt'}`;
+
+        if (exp.receiptMime === 'application/pdf' || exp.receiptDataUrl.startsWith('data:application/pdf')) {
+          dom.receiptModalBody.innerHTML = `<iframe src="${exp.receiptDataUrl}" class="w-full h-[60vh] rounded-lg border border-white/10" title="Receipt PDF"></iframe>`;
+        } else {
+          dom.receiptModalBody.innerHTML = `<img src="${exp.receiptDataUrl}" alt="Receipt for ${escapeHtml(exp.vendor)}" class="max-h-[62vh] w-auto rounded-lg object-contain" />`;
+        }
+        dom.receiptModal.classList.remove('hidden');
+      }
+
+      // Render Expenses KPIs, Charts & Table
+      function renderExpensesSection() {
+        const total = state.expenses.reduce((sum, e) => sum + e.amount, 0);
+        const cogs = state.expenses.filter((e) => e.costType === 'COGS').reduce((sum, e) => sum + e.amount, 0);
+        const overhead = state.expenses.filter((e) => e.costType === 'Overhead').reduce((sum, e) => sum + e.amount, 0);
+        const withReceipts = state.expenses.filter((e) => Boolean(e.receiptDataUrl)).length;
+        const count = state.expenses.length;
+
+        dom.kpiTotalSpend.textContent = formatMoney(total);
+        dom.kpiTotalCount.textContent = `${count} transaction${count === 1 ? '' : 's'} recorded`;
+        dom.kpiCogsSpend.textContent = formatMoney(cogs);
+        dom.kpiCogsShare.textContent = `${total > 0 ? Math.round((cogs / total) * 100) : 0}% of total spend`;
+        dom.kpiOverheadSpend.textContent = formatMoney(overhead);
+        dom.kpiOverheadShare.textContent = `${total > 0 ? Math.round((overhead / total) * 100) : 0}% of total spend`;
+        dom.kpiReceiptCoverage.textContent = `${count > 0 ? Math.round((withReceipts / count) * 100) : 0}%`;
+        dom.kpiReceiptCountText.textContent = `${withReceipts} of ${count} entries have receipts`;
+
+        // Category Breakdown
+        const catTotals = {};
+        state.expenses.forEach((e) => {
+          const c = normalizeExpenseCategory(e.category);
+          catTotals[c] = (catTotals[c] || 0) + e.amount;
+        });
+        const sortedCats = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
+
+        if (sortedCats.length === 0) {
+          dom.categoryBreakdownList.innerHTML =
+            '<p class="text-xs text-gray-500 py-4 text-center">No expense data yet. Log your first purchase above.</p>';
+        } else {
+          dom.categoryBreakdownList.innerHTML = sortedCats
+            .map(([cat, amt], idx) => {
+              const pct = total > 0 ? (amt / total) * 100 : 0;
+              const barColor = idx % 2 === 0 ? 'bg-hotPink' : 'bg-neonCyan';
+              return `
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-1">
+                    <span class="font-semibold text-gray-200">${escapeHtml(cat)}</span>
+                    <span class="font-mono text-gray-300">${formatMoney(amt)} <span class="text-gray-500">(${pct.toFixed(1)}%)</span></span>
+                  </div>
+                  <div class="h-2 w-full rounded-full bg-obsidian overflow-hidden border border-white/5">
+                    <div class="h-full ${barColor} rounded-full" style="width: ${Math.max(3, pct)}%"></div>
+                  </div>
+                </div>
+              `;
+            })
+            .join('');
+        }
+
+        // Year Selector & Monthly Breakdown
+        const yearsSet = new Set([String(new Date().getFullYear())]);
+        state.expenses.forEach((e) => {
+          if (e.date && e.date.length >= 4) yearsSet.add(e.date.slice(0, 4));
+        });
+        const years = Array.from(yearsSet).sort().reverse();
+        if (!years.includes(state.selectedYear)) state.selectedYear = years[0];
+        dom.taxYearSelect.innerHTML = years
+          .map((y) => `<option value="${y}" ${y === state.selectedYear ? 'selected' : ''}>${y}</option>`)
+          .join('');
+
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthlyData = monthNames.map((label, mIdx) => {
+          const prefix = `${state.selectedYear}-${String(mIdx + 1).padStart(2, '0')}`;
+          const mCogs = state.expenses
+            .filter((e) => e.date.startsWith(prefix) && e.costType === 'COGS')
+            .reduce((s, e) => s + e.amount, 0);
+          const mOv = state.expenses
+            .filter((e) => e.date.startsWith(prefix) && e.costType === 'Overhead')
+            .reduce((s, e) => s + e.amount, 0);
+          return { label, mCogs, mOv, total: mCogs + mOv };
+        });
+        const maxMonth = Math.max(1, ...monthlyData.map((m) => m.total));
+
+        dom.monthlyBarsContainer.innerHTML = monthlyData
+          .map((m) => {
+            const cogsPct = (m.mCogs / maxMonth) * 100;
+            const ovPct = (m.mOv / maxMonth) * 100;
+            return `
+              <div class="flex items-center gap-2.5 text-xs">
+                <span class="w-8 font-mono text-gray-400">${m.label}</span>
+                <div class="flex-1 h-2.5 rounded-full bg-obsidian overflow-hidden flex border border-white/5">
+                  <div class="h-full bg-hotPink" style="width: ${cogsPct}%" title="COGS: ${formatMoney(m.mCogs)}"></div>
+                  <div class="h-full bg-neonCyan" style="width: ${ovPct}%" title="Overhead: ${formatMoney(m.mOv)}"></div>
+                </div>
+                <span class="w-20 text-right font-mono text-gray-300">${m.total > 0 ? formatMoney(m.total) : '—'}</span>
+              </div>
+            `;
+          })
+          .join('');
+
+        // Filtered Ledger Table
+        const q = state.filters.search.toLowerCase();
+        const filtered = state.expenses
+          .filter((e) => {
+            if (state.filters.category !== 'ALL' && normalizeExpenseCategory(e.category) !== state.filters.category) return false;
+            if (state.filters.costType !== 'ALL' && e.costType !== state.filters.costType) return false;
+            if (state.filters.month && !e.date.startsWith(state.filters.month)) return false;
+            if (q && !`${e.vendor} ${e.notes} ${e.category}`.toLowerCase().includes(q)) return false;
+            return true;
+          })
+          .sort((a, b) => b.date.localeCompare(a.date));
+
+        dom.ledgerShowingCount.textContent = `Showing ${filtered.length} of ${state.expenses.length} expenses`;
+
+        if (filtered.length === 0) {
+          dom.expenseTableBody.innerHTML = `
+            <tr>
+              <td colspan="7" class="py-8 px-4 text-center text-xs text-gray-500">
+                No expenses match your current filters.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        dom.expenseTableBody.innerHTML = filtered
+          .map((exp) => {
+            const typeBadge =
+              exp.costType === 'COGS'
+                ? '<span class="rounded-md bg-hotPink/15 border border-hotPink/40 px-2 py-0.5 text-[10px] font-bold uppercase text-hotPink">COGS</span>'
+                : '<span class="rounded-md bg-neonCyan/15 border border-neonCyan/40 px-2 py-0.5 text-[10px] font-bold uppercase text-neonCyan">Overhead</span>';
+
+            const receiptCell = exp.receiptDataUrl
+              ? `<button type="button" data-action="view-receipt" data-id="${exp.id}" class="rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/40 px-2.5 py-1 text-[11px] font-bold text-emerald-300 transition">View</button>`
+              : '<span class="text-[11px] text-gray-500">None</span>';
+
+            return `
+              <tr class="hover:bg-white/[0.02] transition">
+                <td class="py-3 px-4 font-mono text-xs text-gray-300 whitespace-nowrap">${escapeHtml(exp.date)}</td>
+                <td class="py-3 px-4">
+                  <div class="font-bold text-white">${escapeHtml(exp.vendor)}</div>
+                  <div class="text-xs text-gray-400 line-clamp-1">${escapeHtml(exp.notes || '—')}</div>
+                </td>
+                <td class="py-3 px-4 text-xs text-gray-200 whitespace-nowrap">${escapeHtml(normalizeExpenseCategory(exp.category))}</td>
+                <td class="py-3 px-4 whitespace-nowrap">${typeBadge}</td>
+                <td class="py-3 px-4 whitespace-nowrap">${receiptCell}</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-white whitespace-nowrap">${formatMoney(exp.amount)}</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1.5">
+                  <button type="button" data-action="edit-expense" data-id="${exp.id}" class="rounded-lg bg-white/5 hover:bg-neonCyan/20 px-2.5 py-1 text-xs font-semibold text-neonCyan transition">Edit</button>
+                  <button type="button" data-action="delete-expense" data-id="${exp.id}" class="rounded-lg bg-white/5 hover:bg-rose-500/20 px-2.5 py-1 text-xs font-semibold text-rose-300 transition">Delete</button>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
+
+      // Product Catalog Management
+      function updateLiveProductMarginPreview() {
+        const price = Number.parseFloat(dom.prodPriceInput.value) || 0;
+        const cogs = Number.parseFloat(dom.prodCogsInput.value) || 0;
+        const profit = price - cogs;
+        const margin = price > 0 ? (profit / price) * 100 : 0;
+        dom.prodLiveProfitPreview.textContent = formatMoney(profit);
+        dom.prodLiveMarginPreview.textContent = `${margin.toFixed(1)}%`;
+      }
+
+      function generateSku(name, type) {
+        const typeCode = (type || 'GEN')
+          .replace(/[^A-Za-z]/g, '')
+          .slice(0, 3)
+          .toUpperCase();
+        const nameCode = (name || 'ITEM')
+          .replace(/[^A-Za-z0-9]/g, '')
+          .slice(0, 4)
+          .toUpperCase();
+        const rand = Math.floor(10 + Math.random() * 89);
+        return `BA-${typeCode}-${nameCode}${rand}`;
+      }
+
+      function resetProductForm() {
+        dom.productForm.reset();
+        dom.prodEditIdInput.value = '';
+        dom.prodTypeSelect.value = 'Dice Tower / Box';
+        dom.prodStatusSelect.value = 'Active';
+        dom.prodFormModeBadge.textContent = 'New Catalog Item';
+        dom.prodFormHeading.textContent = 'Add Bonus Action Product';
+        dom.btnSubmitProduct.textContent = '+ Save Product to Catalog';
+        dom.btnCancelProductEdit.classList.add('hidden');
+        updateLiveProductMarginPreview();
+      }
+
+      function handleProductFormSubmit(e) {
+        e.preventDefault();
+        const name = dom.prodNameInput.value.trim();
+        const type = dom.prodTypeSelect.value;
+        const sku = dom.prodSkuInput.value.trim().toUpperCase() || generateSku(name, type);
+        const status = dom.prodStatusSelect.value;
+        const sellPrice = Number.parseFloat(dom.prodPriceInput.value);
+        const unitCogs = Number.parseFloat(dom.prodCogsInput.value) || 0;
+        const variants = dom.prodVariantsInput.value.trim();
+        const description = dom.prodDescInput.value.trim();
+
+        if (!name || !Number.isFinite(sellPrice) || sellPrice < 0) {
+          showToast('Please enter a product name and valid sell price.', 'pink');
+          return;
+        }
+
+        const editId = dom.prodEditIdInput.value;
+        if (editId) {
+          const idx = state.products.findIndex((p) => p.id === editId);
+          if (idx !== -1) {
+            state.products[idx] = {
+              ...state.products[idx],
+              name,
+              type,
+              sku,
+              status,
+              sellPrice: Number(sellPrice.toFixed(2)),
+              unitCogs: Number(unitCogs.toFixed(2)),
+              variants,
+              description,
+            };
+            showToast(`Updated product: ${name}`, 'cyan');
+          }
+        } else {
+          const newId = `prod-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+          state.products.unshift({
+            id: newId,
+            name,
+            type,
+            sku,
+            status,
+            sellPrice: Number(sellPrice.toFixed(2)),
+            unitCogs: Number(unitCogs.toFixed(2)),
+            variants,
+            description,
+          });
+          ensureInventoryRecordsForProducts();
+          showToast(`Added "${name}" to Product Catalog`, 'emerald');
+        }
+
+        saveToStorage();
+        resetProductForm();
+        renderAll();
+      }
+
+      function startEditProduct(id) {
+        const prod = state.products.find((p) => p.id === id);
+        if (!prod) return;
+        switchTab('products');
+        dom.prodEditIdInput.value = prod.id;
+        dom.prodNameInput.value = prod.name;
+        dom.prodTypeSelect.value = prod.type;
+        dom.prodSkuInput.value = prod.sku;
+        dom.prodStatusSelect.value = prod.status;
+        dom.prodPriceInput.value = prod.sellPrice.toFixed(2);
+        dom.prodCogsInput.value = prod.unitCogs.toFixed(2);
+        dom.prodVariantsInput.value = prod.variants || '';
+        dom.prodDescInput.value = prod.description || '';
+        dom.prodFormModeBadge.textContent = 'Editing Catalog Product';
+        dom.prodFormHeading.textContent = `Edit: ${prod.name}`;
+        dom.btnSubmitProduct.textContent = 'Save Product Changes';
+        dom.btnCancelProductEdit.classList.remove('hidden');
+        updateLiveProductMarginPreview();
+        dom.productForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function duplicateProduct(id) {
+        const prod = state.products.find((p) => p.id === id);
+        if (!prod) return;
+        const copy = {
+          ...prod,
+          id: `prod-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          name: `${prod.name} (Copy)`,
+          sku: generateSku(prod.name, prod.type),
+        };
+        state.products.unshift(copy);
+        ensureInventoryRecordsForProducts();
+        saveToStorage();
+        renderAll();
+        showToast(`Duplicated "${prod.name}"`, 'cyan');
+      }
+
+      function deleteProduct(id) {
+        const prod = state.products.find((p) => p.id === id);
+        if (!prod) return;
+        openConfirmModal(
+          'Delete Product from Catalog?',
+          `Remove "${prod.name}" (${prod.sku})? Existing orders will keep their recorded line item snapshots.`,
+          () => {
+            state.products = state.products.filter((p) => p.id !== id);
+            state.inventory = state.inventory.filter((inv) => inv.productId !== id);
+            saveToStorage();
+            renderAll();
+            showToast('Product removed from catalog.', 'pink');
+          }
+        );
+      }
+
+      function renderProductsSection() {
+        const total = state.products.length;
+        const active = state.products.filter((p) => p.status !== 'Discontinued').length;
+        const avgPrice = total > 0 ? state.products.reduce((s, p) => s + p.sellPrice, 0) / total : 0;
+        const avgMargin =
+          total > 0
+            ? state.products.reduce((s, p) => s + (p.sellPrice > 0 ? ((p.sellPrice - p.unitCogs) / p.sellPrice) * 100 : 0), 0) /
+              total
+            : 0;
+
+        dom.prodKpiTotal.textContent = String(total);
+        dom.prodKpiActive.textContent = String(active);
+        dom.prodKpiAvgPrice.textContent = formatMoney(avgPrice);
+        dom.prodKpiAvgMargin.textContent = `${avgMargin.toFixed(1)}%`;
+
+        const q = state.prodFilters.search.toLowerCase();
+        const filtered = state.products.filter((p) => {
+          if (state.prodFilters.type !== 'ALL' && p.type !== state.prodFilters.type) return false;
+          if (state.prodFilters.status !== 'ALL' && p.status !== state.prodFilters.status) return false;
+          if (q && !`${p.name} ${p.sku} ${p.description} ${p.variants}`.toLowerCase().includes(q)) return false;
+          return true;
+        });
+
+        dom.productShowingCount.textContent = `Showing ${filtered.length} of ${state.products.length} products`;
+
+        if (filtered.length === 0) {
+          dom.productTableBody.innerHTML = `
+            <tr>
+              <td colspan="8" class="py-8 px-4 text-center text-xs text-gray-500">
+                No products match your filters.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        dom.productTableBody.innerHTML = filtered
+          .map((p) => {
+            const unitProfit = p.sellPrice - p.unitCogs;
+            const marginPct = p.sellPrice > 0 ? (unitProfit / p.sellPrice) * 100 : 0;
+            const statusClass =
+              p.status === 'Active'
+                ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/40'
+                : p.status === 'Made-to-Order'
+                ? 'bg-neonCyan/15 text-neonCyan border-neonCyan/40'
+                : 'bg-gray-500/15 text-gray-400 border-gray-500/40';
+
+            return `
+              <tr class="hover:bg-white/[0.02] transition">
+                <td class="py-3 px-4 max-w-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-white">${escapeHtml(p.name)}</span>
+                    <span class="rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${statusClass}">${escapeHtml(p.status)}</span>
+                  </div>
+                  <p class="mt-0.5 text-xs text-gray-400 line-clamp-2">${escapeHtml(p.description || '—')}</p>
+                </td>
+                <td class="py-3 px-4 text-xs text-gray-300 whitespace-nowrap">${escapeHtml(p.type)}</td>
+                <td class="py-3 px-4 font-mono text-xs text-neonCyan whitespace-nowrap">${escapeHtml(p.sku)}</td>
+                <td class="py-3 px-4 text-xs text-gray-400 max-w-[200px]">${escapeHtml(p.variants || 'Standard')}</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-white whitespace-nowrap">${formatMoney(p.sellPrice)}</td>
+                <td class="py-3 px-4 text-right font-mono text-xs text-gray-300 whitespace-nowrap">${formatMoney(p.unitCogs)}</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap">
+                  <div class="font-mono text-xs font-bold text-emerald-300">${formatMoney(unitProfit)}</div>
+                  <div class="text-[10px] text-gray-400">${marginPct.toFixed(0)}% margin</div>
+                </td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1">
+                  <button type="button" data-action="edit-product" data-id="${p.id}" class="rounded-lg bg-white/5 hover:bg-neonCyan/20 px-2.5 py-1 text-xs font-semibold text-neonCyan transition">Edit</button>
+                  <button type="button" data-action="dup-product" data-id="${p.id}" class="rounded-lg bg-white/5 hover:bg-white/15 px-2.5 py-1 text-xs font-semibold text-gray-300 transition">Clone</button>
+                  <button type="button" data-action="delete-product" data-id="${p.id}" class="rounded-lg bg-white/5 hover:bg-rose-500/20 px-2.5 py-1 text-xs font-semibold text-rose-300 transition">Delete</button>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
+
+      // Orders Module
+      function populateOrderProductDropdown() {
+        const activeProducts = state.products.filter((p) => p.status !== 'Discontinued');
+        if (activeProducts.length === 0) {
+          dom.orderProductSelect.innerHTML = '<option value="">No active products in catalog</option>';
+          dom.orderUnitPriceInput.value = '0.00';
+          return;
+        }
+        const prevVal = dom.orderProductSelect.value;
+        dom.orderProductSelect.innerHTML = activeProducts
+          .map((p) => `<option value="${p.id}">${escapeHtml(p.name)} (${formatMoney(p.sellPrice)})</option>`)
+          .join('');
+        if (activeProducts.some((p) => p.id === prevVal)) {
+          dom.orderProductSelect.value = prevVal;
+        }
+        syncOrderSelectedProductPrice();
+      }
+
+      function syncOrderSelectedProductPrice() {
+        const prod = state.products.find((p) => p.id === dom.orderProductSelect.value);
+        if (prod) {
+          dom.orderUnitPriceInput.value = prod.sellPrice.toFixed(2);
+        }
+      }
+
+      function addStagedOrderLine() {
+        const prod = state.products.find((p) => p.id === dom.orderProductSelect.value);
+        if (!prod) {
+          showToast('Select a valid product from your catalog first.', 'pink');
+          return;
+        }
+        const qty = Math.max(1, Number.parseInt(dom.orderQtyInput.value, 10) || 1);
+        const unitPrice = Number.parseFloat(dom.orderUnitPriceInput.value);
+        const finalPrice = Number.isFinite(unitPrice) && unitPrice >= 0 ? unitPrice : prod.sellPrice;
+        const variant = dom.orderVariantInput.value.trim() || 'Standard';
+
+        state.stagedOrderLines.push({
+          lineId: `line-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+          productId: prod.id,
+          productName: prod.name,
+          variant,
+          qty,
+          unitPrice: Number(finalPrice.toFixed(2)),
+          unitCogs: Number((prod.unitCogs || 0).toFixed(2)),
+        });
+
+        dom.orderVariantInput.value = '';
+        dom.orderQtyInput.value = '1';
+        renderStagedOrderLines();
+        showToast(`Added ${qty}x ${prod.name} to order cart`, 'cyan');
+      }
+
+      function renderStagedOrderLines() {
+        if (state.stagedOrderLines.length === 0) {
+          dom.orderStagedLinesBody.innerHTML = `
+            <tr>
+              <td colspan="4" class="py-6 px-3 text-center text-xs text-gray-500">
+                Cart is empty. Select a catalog product on the left and click "+ Add Item to Order".
+              </td>
+            </tr>
+          `;
+          dom.orderStagedTotal.textContent = '$0.00';
+          dom.orderStagedCogs.textContent = '$0.00';
+          dom.orderStagedProfit.textContent = '$0.00';
+          return;
+        }
+
+        let total = 0;
+        let totalCogs = 0;
+
+        dom.orderStagedLinesBody.innerHTML = state.stagedOrderLines
+          .map((line) => {
+            const sub = line.qty * line.unitPrice;
+            const cogs = line.qty * line.unitCogs;
+            total += sub;
+            totalCogs += cogs;
+            return `
+              <tr>
+                <td class="py-2.5 px-3">
+                  <div class="font-bold text-white">${escapeHtml(line.productName)}</div>
+                  <div class="text-[11px] text-gray-400">${escapeHtml(line.variant)} • ${formatMoney(line.unitPrice)} ea</div>
+                </td>
+                <td class="py-2.5 px-2 text-center font-mono text-gray-200">${line.qty}</td>
+                <td class="py-2.5 px-3 text-right font-mono font-bold text-white">${formatMoney(sub)}</td>
+                <td class="py-2.5 px-2 text-right">
+                  <button type="button" data-action="remove-staged-line" data-id="${line.lineId}" class="text-rose-400 hover:text-rose-300 font-bold">✕</button>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+
+        dom.orderStagedTotal.textContent = formatMoney(total);
+        dom.orderStagedCogs.textContent = formatMoney(totalCogs);
+        dom.orderStagedProfit.textContent = formatMoney(total - totalCogs);
+      }
+
+      function handleOrderFormSubmit(e) {
+        e.preventDefault();
+        if (state.stagedOrderLines.length === 0) {
+          showToast('Add at least one catalog item to the order cart first.', 'pink');
+          return;
+        }
+        const customer = dom.orderCustomerInput.value.trim();
+        if (!customer) {
+          showToast('Please enter the customer name or handle.', 'pink');
+          return;
+        }
+
+        const status = dom.orderStatusSelect.value;
+        const shouldAutoDeduct =
+          dom.orderAutoDeductCheckbox.checked && (status === 'Shipped' || status === 'Completed / Picked Up');
+
+        const newOrder = {
+          id: `ord-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          date: dom.orderDateInput.value || getTodayIsoDate(),
+          customer,
+          channel: dom.orderChannelSelect.value,
+          paymentMethod: dom.orderPaymentSelect.value,
+          status,
+          stockDeducted: false,
+          notes: dom.orderNotesInput.value.trim(),
+          items: state.stagedOrderLines.map(({ lineId, ...rest }) => rest),
+        };
+
+        if (shouldAutoDeduct) {
+          deductOrderFromInventory(newOrder);
+        }
+
+        state.orders.unshift(newOrder);
+        state.stagedOrderLines = [];
+        dom.orderForm.reset();
+        dom.orderDateInput.value = getTodayIsoDate();
+        dom.orderAutoDeductCheckbox.checked = true;
+
+        saveToStorage();
+        renderAll();
+        showToast(`Order recorded for ${customer}!`, 'emerald');
+      }
+
+      function deductOrderFromInventory(order) {
+        if (!order || order.stockDeducted) return;
+        ensureInventoryRecordsForProducts();
+        order.items.forEach((item) => {
+          const inv = state.inventory.find((r) => r.productId === item.productId);
+          if (inv) {
+            inv.onHand = Math.max(0, (inv.onHand || 0) - item.qty);
+            logInventoryMovement(item.productName, `-${item.qty}`, `Order fulfilled (${order.customer})`);
+          }
+        });
+        order.stockDeducted = true;
+      }
+
+      function toggleOrderFulfillment(orderId) {
+        const order = state.orders.find((o) => o.id === orderId);
+        if (!order) return;
+        if (!order.stockDeducted) {
+          order.status = 'Completed / Picked Up';
+          deductOrderFromInventory(order);
+          saveToStorage();
+          renderAll();
+          showToast(`Fulfilled order for ${order.customer} & deducted stock.`, 'emerald');
+        }
+      }
+
+      function deleteOrder(orderId) {
+        const order = state.orders.find((o) => o.id === orderId);
+        if (!order) return;
+        openConfirmModal(
+          'Delete Customer Order?',
+          `Remove order for "${order.customer}" (${order.date}) from your order ledger?`,
+          () => {
+            state.orders = state.orders.filter((o) => o.id !== orderId);
+            saveToStorage();
+            renderAll();
+            showToast('Order deleted.', 'pink');
+          }
+        );
+      }
+
+      function renderOrdersSection() {
+        populateOrderProductDropdown();
+        renderStagedOrderLines();
+
+        const sorted = [...state.orders].sort((a, b) => b.date.localeCompare(a.date));
+        dom.ordersTableCount.textContent = `${sorted.length} order${sorted.length === 1 ? '' : 's'} recorded`;
+
+        if (sorted.length === 0) {
+          dom.ordersTableBody.innerHTML = `
+            <tr>
+              <td colspan="8" class="py-8 px-4 text-center text-xs text-gray-500">
+                No orders logged yet. Build an order above using your Product Catalog.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        dom.ordersTableBody.innerHTML = sorted
+          .map((ord) => {
+            const ordTotal = ord.items.reduce((s, it) => s + it.qty * it.unitPrice, 0);
+            const ordCogs = ord.items.reduce((s, it) => s + it.qty * (it.unitCogs || 0), 0);
+            const estProfit = ordTotal - ordCogs;
+
+            const itemsSummary = ord.items
+              .map((it) => `${it.qty}× ${it.productName}${it.variant ? ` (${it.variant})` : ''}`)
+              .join(', ');
+
+            const statusBadge =
+              ord.status === 'Completed / Picked Up' || ord.status === 'Shipped'
+                ? `<span class="rounded-md bg-emerald-500/15 border border-emerald-400/40 px-2 py-0.5 text-[10px] font-bold text-emerald-300">${escapeHtml(ord.status)}</span>`
+                : `<span class="rounded-md bg-amber-500/15 border border-amber-400/40 px-2 py-0.5 text-[10px] font-bold text-amber-300">${escapeHtml(ord.status)}</span>`;
+
+            const fulfillBtn = !ord.stockDeducted
+              ? `<button type="button" data-action="fulfill-order" data-id="${ord.id}" class="rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/40 px-2.5 py-1 text-xs font-bold text-emerald-300 transition">Fulfill &amp; Deduct</button>`
+              : `<span class="text-[10px] font-mono text-gray-500 px-1.5">Stock Deducted</span>`;
+
+            return `
+              <tr class="hover:bg-white/[0.02] transition">
+                <td class="py-3 px-4 font-mono text-xs text-gray-300 whitespace-nowrap">${escapeHtml(ord.date)}</td>
+                <td class="py-3 px-4">
+                  <div class="font-bold text-white">${escapeHtml(ord.customer)}</div>
+                  <div class="text-xs text-gray-400 line-clamp-1">${escapeHtml(ord.notes || '')}</div>
+                </td>
+                <td class="py-3 px-4 text-xs text-gray-200 max-w-xs">${escapeHtml(itemsSummary)}</td>
+                <td class="py-3 px-4 text-xs text-gray-300 whitespace-nowrap">
+                  <div>${escapeHtml(ord.channel)}</div>
+                  <div class="text-[11px] text-neonCyan">${escapeHtml(ord.paymentMethod)}</div>
+                </td>
+                <td class="py-3 px-4 whitespace-nowrap">${statusBadge}</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-white whitespace-nowrap">${formatMoney(ordTotal)}</td>
+                <td class="py-3 px-4 text-right font-mono text-xs font-bold text-emerald-300 whitespace-nowrap">${formatMoney(estProfit)}</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1.5">
+                  ${fulfillBtn}
+                  <button type="button" data-action="delete-order" data-id="${ord.id}" class="rounded-lg bg-white/5 hover:bg-rose-500/20 px-2.5 py-1 text-xs font-semibold text-rose-300 transition">Delete</button>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
+
+      // Inventory Module
+      function ensureInventoryRecordsForProducts() {
+        const existingMap = new Map(state.inventory.map((r) => [r.productId, r]));
+        state.products.forEach((p) => {
+          if (!existingMap.has(p.id)) {
+            state.inventory.push({
+              productId: p.id,
+              onHand: 0,
+              reorderPoint: 3,
+              location: 'Unassigned Bin',
+            });
+          }
+        });
+      }
+
+      function logInventoryMovement(productName, deltaText, reason) {
+        const now = new Date();
+        const ts = `${getTodayIsoDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        state.inventoryLogs.unshift({
+          id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+          timestamp: ts,
+          productName,
+          deltaText,
+          reason,
+        });
+      }
+
+      function computeReservedByProduct() {
+        const reserved = {};
+        state.orders.forEach((ord) => {
+          if (!ord.stockDeducted && ord.status !== 'Completed / Picked Up' && ord.status !== 'Shipped') {
+            ord.items.forEach((it) => {
+              reserved[it.productId] = (reserved[it.productId] || 0) + it.qty;
+            });
+          }
+        });
+        return reserved;
+      }
+
+      function handleInventoryAdjustSubmit(e) {
+        e.preventDefault();
+        const productId = dom.invProductSelect.value;
+        const prod = state.products.find((p) => p.id === productId);
+        if (!prod) {
+          showToast('Select a product to adjust.', 'pink');
+          return;
+        }
+        ensureInventoryRecordsForProducts();
+        const inv = state.inventory.find((r) => r.productId === productId);
+        const action = dom.invActionType.value;
+        const qty = Math.max(0, Number.parseInt(dom.invQtyInput.value, 10) || 0);
+        const reorderVal = dom.invReorderInput.value !== '' ? Math.max(0, Number.parseInt(dom.invReorderInput.value, 10) || 0) : null;
+        const locVal = dom.invLocationInput.value.trim();
+        const notes = dom.invNotesInput.value.trim();
+
+        let deltaLabel = '';
+        if (action === 'add') {
+          inv.onHand += qty;
+          deltaLabel = `+${qty}`;
+        } else if (action === 'remove') {
+          inv.onHand = Math.max(0, inv.onHand - qty);
+          deltaLabel = `-${qty}`;
+        } else {
+          inv.onHand = qty;
+          deltaLabel = `=${qty}`;
+        }
+
+        if (reorderVal !== null) inv.reorderPoint = reorderVal;
+        if (locVal) inv.location = locVal;
+
+        logInventoryMovement(prod.name, deltaLabel, notes || `Manual stock adjustment (${action})`);
+        dom.invNotesInput.value = '';
+        saveToStorage();
+        renderAll();
+        showToast(`Updated stock for ${prod.name} (${deltaLabel})`, 'cyan');
+      }
+
+      function quickAdjustInventory(productId, delta) {
+        ensureInventoryRecordsForProducts();
+        const inv = state.inventory.find((r) => r.productId === productId);
+        const prod = state.products.find((p) => p.id === productId);
+        if (!inv || !prod) return;
+        inv.onHand = Math.max(0, inv.onHand + delta);
+        logInventoryMovement(prod.name, delta > 0 ? `+${delta}` : `${delta}`, 'Quick table adjustment');
+        saveToStorage();
+        renderAll();
+      }
+
+      function renderInventorySection() {
+        ensureInventoryRecordsForProducts();
+
+        // Populate product dropdown
+        const prevProd = dom.invProductSelect.value;
+        dom.invProductSelect.innerHTML =
+          state.products.length > 0
+            ? state.products.map((p) => `<option value="${p.id}">${escapeHtml(p.name)} (${escapeHtml(p.sku)})</option>`).join('')
+            : '<option value="">No products in catalog</option>';
+        if (state.products.some((p) => p.id === prevProd)) dom.invProductSelect.value = prevProd;
+
+        const reservedMap = computeReservedByProduct();
+        let totalUnits = 0;
+        let totalCogsVal = 0;
+        let totalRetailVal = 0;
+        let lowCount = 0;
+
+        const mergedRows = state.products.map((prod) => {
+          const inv = state.inventory.find((r) => r.productId === prod.id) || {
+            productId: prod.id,
+            onHand: 0,
+            reorderPoint: 3,
+            location: 'Unassigned Bin',
+          };
+          const reserved = reservedMap[prod.id] || 0;
+          const available = inv.onHand - reserved;
+          totalUnits += inv.onHand;
+          totalCogsVal += inv.onHand * (prod.unitCogs || 0);
+          totalRetailVal += inv.onHand * (prod.sellPrice || 0);
+
+          let stockStatus = 'IN_STOCK';
+          if (available <= 0) {
+            stockStatus = 'OUT_OF_STOCK';
+            lowCount++;
+          } else if (available <= inv.reorderPoint) {
+            stockStatus = 'LOW_STOCK';
+            lowCount++;
+          }
+
+          return { prod, inv, reserved, available, stockStatus };
+        });
+
+        dom.invKpiUnits.textContent = String(totalUnits);
+        dom.invKpiCogsValue.textContent = formatMoney(totalCogsVal);
+        dom.invKpiRetailValue.textContent = formatMoney(totalRetailVal);
+        dom.invKpiLowCount.textContent = String(lowCount);
+        dom.invKpiLowSub.textContent = lowCount > 0 ? `${lowCount} SKU(s) need restock` : 'All tracked SKUs healthy';
+
+        // Recent Logs
+        dom.invLogCount.textContent = `${state.inventoryLogs.length} events`;
+        if (state.inventoryLogs.length === 0) {
+          dom.invLogsList.innerHTML = '<p class="text-xs text-gray-500">No inventory movements logged yet.</p>';
+        } else {
+          dom.invLogsList.innerHTML = state.inventoryLogs
+            .slice(0, 15)
+            .map((log) => {
+              const isNeg = String(log.deltaText).startsWith('-');
+              const badgeClass = isNeg
+                ? 'bg-hotPink/15 text-hotPink border-hotPink/40'
+                : 'bg-neonCyan/15 text-neonCyan border-neonCyan/40';
+              return `
+                <div class="rounded-xl bg-obsidian/80 border border-white/10 p-2.5 text-xs flex items-start justify-between gap-2">
+                  <div>
+                    <div class="font-bold text-white">${escapeHtml(log.productName)}</div>
+                    <div class="text-[11px] text-gray-400">${escapeHtml(log.reason)}</div>
+                    <div class="text-[10px] font-mono text-gray-500 mt-0.5">${escapeHtml(log.timestamp)}</div>
+                  </div>
+                  <span class="shrink-0 rounded-md border px-2 py-0.5 font-mono text-[11px] font-bold ${badgeClass}">${escapeHtml(log.deltaText)}</span>
+                </div>
+              `;
+            })
+            .join('');
+        }
+
+        // Filtered Table
+        const q = state.invFilters.search.toLowerCase();
+        const filtered = mergedRows.filter(({ prod, inv, stockStatus }) => {
+          if (state.invFilters.status !== 'ALL' && stockStatus !== state.invFilters.status) return false;
+          if (q && !`${prod.name} ${prod.sku} ${inv.location}`.toLowerCase().includes(q)) return false;
+          return true;
+        });
+
+        dom.invShowingCount.textContent = `Showing ${filtered.length} of ${mergedRows.length} inventory items`;
+
+        if (filtered.length === 0) {
+          dom.inventoryTableBody.innerHTML = `
+            <tr>
+              <td colspan="8" class="py-8 px-4 text-center text-xs text-gray-500">
+                No inventory records match your filter.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        dom.inventoryTableBody.innerHTML = filtered
+          .map(({ prod, inv, reserved, available, stockStatus }) => {
+            const statusBadge =
+              stockStatus === 'OUT_OF_STOCK'
+                ? '<span class="rounded-md bg-rose-500/15 border border-rose-400/40 px-2 py-0.5 text-[10px] font-bold uppercase text-rose-300">Out of Stock</span>'
+                : stockStatus === 'LOW_STOCK'
+                ? '<span class="rounded-md bg-amber-500/15 border border-amber-400/40 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-300">Low Stock</span>'
+                : '<span class="rounded-md bg-emerald-500/15 border border-emerald-400/40 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-300">In Stock</span>';
+
+            return `
+              <tr class="hover:bg-white/[0.02] transition">
+                <td class="py-3 px-4">
+                  <div class="font-bold text-white">${escapeHtml(prod.name)}</div>
+                  <div class="font-mono text-[11px] text-neonCyan">${escapeHtml(prod.sku)} • ${escapeHtml(prod.type)}</div>
+                </td>
+                <td class="py-3 px-4">
+                  <div class="text-xs text-gray-300 mb-1">${escapeHtml(inv.location || 'Unassigned')}</div>
+                  ${statusBadge}
+                </td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-white">${inv.onHand}</td>
+                <td class="py-3 px-4 text-right font-mono text-amber-300">${reserved}</td>
+                <td class="py-3 px-4 text-right font-mono font-extrabold ${available <= 0 ? 'text-rose-400' : 'text-emerald-300'}">${available}</td>
+                <td class="py-3 px-4 text-right font-mono text-xs text-gray-400">${inv.reorderPoint}</td>
+                <td class="py-3 px-4 text-right font-mono text-xs text-gray-200">${formatMoney(inv.onHand * (prod.unitCogs || 0))}</td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-1">
+                  <button type="button" data-action="inv-minus" data-id="${prod.id}" class="rounded-lg bg-white/5 hover:bg-hotPink/20 px-2.5 py-1 font-mono text-xs font-bold text-hotPink transition">-1</button>
+                  <button type="button" data-action="inv-plus" data-id="${prod.id}" class="rounded-lg bg-white/5 hover:bg-neonCyan/20 px-2.5 py-1 font-mono text-xs font-bold text-neonCyan transition">+1</button>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
+
+      // Profit & Loss Rollup + Side-by-Side 6-Month Charts
+      function getTrailingSixMonths() {
+        const months = [];
+        const now = new Date();
+        now.setDate(1);
+        for (let i = 5; i >= 0; i--) {
+          const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+          const label = d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+          months.push({ key, label });
+        }
+        return months;
+      }
+
+      function renderProfitAndLossSection() {
+        const totalRevenue = state.orders.reduce(
+          (sum, ord) => sum + ord.items.reduce((s, it) => s + it.qty * it.unitPrice, 0),
+          0
+        );
+        const totalCogs = state.expenses.filter((e) => e.costType === 'COGS').reduce((s, e) => s + e.amount, 0);
+        const totalOverhead = state.expenses.filter((e) => e.costType === 'Overhead').reduce((s, e) => s + e.amount, 0);
+        const netCash = totalRevenue - totalCogs - totalOverhead;
+
+        dom.pnlLiveRevenue.textContent = formatMoney(totalRevenue);
+        dom.pnlLiveCogs.textContent = formatMoney(totalCogs);
+        dom.pnlLiveOverhead.textContent = formatMoney(totalOverhead);
+        dom.pnlLiveNet.textContent = formatMoney(netCash);
+        dom.pnlLiveNet.className = `mt-1 font-display text-2xl font-black ${
+          netCash >= 0 ? 'text-emerald-300' : 'text-rose-400'
+        }`;
+
+        // Build 6-Month Trailing Series
+        const months = getTrailingSixMonths();
+        const series = months.map((m) => {
+          const rev = state.orders
+            .filter((o) => o.date && o.date.startsWith(m.key))
+            .reduce((sum, ord) => sum + ord.items.reduce((s, it) => s + it.qty * it.unitPrice, 0), 0);
+          const cogs = state.expenses
+            .filter((e) => e.date && e.date.startsWith(m.key) && e.costType === 'COGS')
+            .reduce((s, e) => s + e.amount, 0);
+          const overhead = state.expenses
+            .filter((e) => e.date && e.date.startsWith(m.key) && e.costType === 'Overhead')
+            .reduce((s, e) => s + e.amount, 0);
+          const net = rev - cogs - overhead;
+          return { ...m, rev, cogs, overhead, net };
+        });
+
+        // Chart 1: Order Revenue vs. Net Cash Position (Last 6 Months)
+        const maxAbsRevNet = Math.max(100, ...series.map((s) => Math.max(s.rev, Math.abs(s.net))));
+        const chartHeight = 160;
+        const baselineY = 120; // leaves room below baseline for negative net cash bars
+
+        const revNetBarsSvg = series
+          .map((pt, idx) => {
+            const groupX = 24 + idx * 84;
+            const revH = Math.round((pt.rev / maxAbsRevNet) * 95);
+            const netH = Math.round((Math.abs(pt.net) / maxAbsRevNet) * 34);
+            const netY = pt.net >= 0 ? baselineY - netH : baselineY;
+            const netFill = pt.net >= 0 ? '#34d399' : '#fb7185';
+
+            return `
+              <g>
+                <!-- Order Revenue Bar -->
+                <rect x="${groupX}" y="${baselineY - revH}" width="22" height="${Math.max(2, revH)}" rx="4" fill="#00f5ff" opacity="0.9">
+                  <title>${pt.label} Order Revenue: ${formatMoney(pt.rev)}</title>
+                </rect>
+                <!-- Net Cash Position Bar -->
+                <rect x="${groupX + 26}" y="${netY}" width="22" height="${Math.max(2, netH)}" rx="4" fill="${netFill}">
+                  <title>${pt.label} Net Cash: ${formatMoney(pt.net)}</title>
+                </rect>
+                <!-- Value Labels -->
+                <text x="${groupX + 11}" y="${baselineY - revH - 5}" text-anchor="middle" fill="#67e8f9" font-size="9" font-family="monospace">
+                  ${pt.rev > 0 ? '$' + Math.round(pt.rev) : ''}
+                </text>
+                <!-- Month Label -->
+                <text x="${groupX + 24}" y="${chartHeight - 4}" text-anchor="middle" fill="#9ca3af" font-size="10" font-family="monospace">
+                  ${pt.label}
+                </text>
+              </g>
+            `;
+          })
+          .join('');
+
+        dom.pnlChartRevNet.innerHTML = `
+          <svg viewBox="0 0 530 ${chartHeight}" class="w-full min-w-[440px] h-44">
+            <line x1="12" y1="${baselineY}" x2="518" y2="${baselineY}" stroke="rgba(255,255,255,0.18)" stroke-dasharray="4 4" />
+            ${revNetBarsSvg}
+          </svg>
+        `;
+
+        const sixMoRev = series.reduce((s, x) => s + x.rev, 0);
+        const sixMoNet = series.reduce((s, x) => s + x.net, 0);
+        dom.pnlChartRevNetSummary.innerHTML = `
+          <div>
+            <span class="text-gray-400 block">6-Mo Revenue</span>
+            <strong class="font-mono text-neonCyan">${formatMoney(sixMoRev)}</strong>
+          </div>
+          <div>
+            <span class="text-gray-400 block">6-Mo Net Cash</span>
+            <strong class="font-mono ${sixMoNet >= 0 ? 'text-emerald-300' : 'text-rose-400'}">${formatMoney(sixMoNet)}</strong>
+          </div>
+          <div>
+            <span class="text-gray-400 block">Avg Monthly Rev</span>
+            <strong class="font-mono text-white">${formatMoney(sixMoRev / 6)}</strong>
+          </div>
+        `;
+
+        // Chart 2: Ledger COGS vs. Overhead (Last 6 Months)
+        const maxExp = Math.max(100, ...series.map((s) => Math.max(s.cogs, s.overhead)));
+        const expBaselineY = 136;
+
+        const cogsOvBarsSvg = series
+          .map((pt, idx) => {
+            const groupX = 24 + idx * 84;
+            const cogsH = Math.round((pt.cogs / maxExp) * 108);
+            const ovH = Math.round((pt.overhead / maxExp) * 108);
+
+            return `
+              <g>
+                <rect x="${groupX}" y="${expBaselineY - cogsH}" width="22" height="${Math.max(2, cogsH)}" rx="4" fill="#ff1493">
+                  <title>${pt.label} Ledger COGS: ${formatMoney(pt.cogs)}</title>
+                </rect>
+                <rect x="${groupX + 26}" y="${expBaselineY - ovH}" width="22" height="${Math.max(2, ovH)}" rx="4" fill="#9d4edd">
+                  <title>${pt.label} Ledger Overhead: ${formatMoney(pt.overhead)}</title>
+                </rect>
+                <text x="${groupX + 24}" y="${chartHeight - 4}" text-anchor="middle" fill="#9ca3af" font-size="10" font-family="monospace">
+                  ${pt.label}
+                </text>
+              </g>
+            `;
+          })
+          .join('');
+
+        dom.pnlChartCogsOverhead.innerHTML = `
+          <svg viewBox="0 0 530 ${chartHeight}" class="w-full min-w-[440px] h-44">
+            <line x1="12" y1="${expBaselineY}" x2="518" y2="${expBaselineY}" stroke="rgba(255,255,255,0.18)" stroke-dasharray="4 4" />
+            ${cogsOvBarsSvg}
+          </svg>
+        `;
+
+        const sixMoCogs = series.reduce((s, x) => s + x.cogs, 0);
+        const sixMoOv = series.reduce((s, x) => s + x.overhead, 0);
+        dom.pnlChartCogsOverheadSummary.innerHTML = `
+          <div>
+            <span class="text-gray-400 block">6-Mo COGS</span>
+            <strong class="font-mono text-hotPink">${formatMoney(sixMoCogs)}</strong>
+          </div>
+          <div>
+            <span class="text-gray-400 block">6-Mo Overhead</span>
+            <strong class="font-mono text-purple-300">${formatMoney(sixMoOv)}</strong>
+          </div>
+          <div>
+            <span class="text-gray-400 block">6-Mo Total Outflow</span>
+            <strong class="font-mono text-white">${formatMoney(sixMoCogs + sixMoOv)}</strong>
+          </div>
+        `;
+      }
+
+      // Navigation Badges
+      function updateNavBadges() {
+        dom.navExpenseCount.textContent = String(state.expenses.length);
+        dom.navProductCount.textContent = String(state.products.length);
+        dom.navOrderCount.textContent = String(state.orders.length);
+        const totalUnits = state.inventory.reduce((s, r) => s + (r.onHand || 0), 0);
+        dom.navInventoryCount.textContent = String(totalUnits);
+      }
+
+      function renderAll() {
+        updateNavBadges();
+        renderProfitAndLossSection();
+        renderExpensesSection();
+        renderInventorySection();
+        renderOrdersSection();
+        renderProductsSection();
+      }
+
+      // CSV & JSON Export / Import Handlers
+      function triggerDownload(filename, contentStr, mimeType) {
+        const blob = new Blob([contentStr], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function csvEscape(val) {
+        const s = String(val ?? '');
+        if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+        return s;
+      }
+
+      function exportScheduleCCsv() {
+        const headers = ['Date', 'Vendor', 'Category', 'Cost Classification', 'Schedule C Line Hint', 'Amount ($)', 'Receipt Attached', 'Notes'];
+        const rows = state.expenses.map((e) => [
+          e.date,
+          e.vendor,
+          normalizeExpenseCategory(e.category),
+          e.costType,
+          getScheduleCLineHint(normalizeExpenseCategory(e.category)),
+          e.amount.toFixed(2),
+          e.receiptDataUrl ? 'Yes' : 'No',
+          e.notes,
+        ]);
+        const csv = [headers, ...rows].map((r) => r.map(csvEscape).join(',')).join('\n');
+        triggerDownload(`bonus-action-schedule-c-${getTodayIsoDate()}.csv`, csv, 'text/csv;charset=utf-8;');
+        showToast('Schedule C CSV downloaded!', 'cyan');
+      }
+
+      function exportCatalogOrdersCsv() {
+        const headers = ['Record Type', 'Date / SKU', 'Name / Customer', 'Category / Channel', 'Status', 'Sell / Total ($)', 'COGS ($)', 'Details'];
+        const prodRows = state.products.map((p) => [
+          'PRODUCT',
+          p.sku,
+          p.name,
+          p.type,
+          p.status,
+          p.sellPrice.toFixed(2),
+          p.unitCogs.toFixed(2),
+          p.variants,
+        ]);
+        const ordRows = state.orders.map((o) => {
+          const rev = o.items.reduce((s, it) => s + it.qty * it.unitPrice, 0);
+          const cogs = o.items.reduce((s, it) => s + it.qty * (it.unitCogs || 0), 0);
+          const summary = o.items.map((it) => `${it.qty}x ${it.productName} (${it.variant})`).join('; ');
+          return ['ORDER', o.date, o.customer, o.channel, o.status, rev.toFixed(2), cogs.toFixed(2), summary];
+        });
+        const csv = [headers, ...prodRows, ...ordRows].map((r) => r.map(csvEscape).join(',')).join('\n');
+        triggerDownload(`bonus-action-catalog-orders-${getTodayIsoDate()}.csv`, csv, 'text/csv;charset=utf-8;');
+        showToast('Catalog & Orders CSV downloaded!', 'cyan');
+      }
+
+      function exportInventoryCsv() {
+        const reservedMap = computeReservedByProduct();
+        const headers = ['SKU', 'Product Name', 'Type', 'Location', 'On-Hand', 'Reserved', 'Available', 'Reorder Point', 'Unit COGS ($)', 'Total COGS Value ($)'];
+        const rows = state.products.map((p) => {
+          const inv = state.inventory.find((r) => r.productId === p.id) || { onHand: 0, reorderPoint: 3, location: '' };
+          const res = reservedMap[p.id] || 0;
+          return [
+            p.sku,
+            p.name,
+            p.type,
+            inv.location,
+            inv.onHand,
+            res,
+            inv.onHand - res,
+            inv.reorderPoint,
+            p.unitCogs.toFixed(2),
+            (inv.onHand * p.unitCogs).toFixed(2),
+          ];
+        });
+        const csv = [headers, ...rows].map((r) => r.map(csvEscape).join(',')).join('\n');
+        triggerDownload(`bonus-action-inventory-${getTodayIsoDate()}.csv`, csv, 'text/csv;charset=utf-8;');
+        showToast('Inventory CSV downloaded!', 'cyan');
+      }
+
+      function exportJsonBackup() {
+        const payload = {
+          app: 'Bonus Action Command Dashboard',
+          version: '2.0',
+          exportedAt: new Date().toISOString(),
+          expenses: state.expenses,
+          products: state.products,
+          orders: state.orders,
+          inventory: state.inventory,
+          inventoryLogs: state.inventoryLogs,
+        };
+        triggerDownload(`bonus-action-backup-${getTodayIsoDate()}.json`, JSON.stringify(payload, null, 2), 'application/json');
+        showToast('Full JSON Backup saved!', 'pink');
+      }
+
+      function handleJsonRestore(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          try {
+            const parsed = JSON.parse(String(ev.target.result || '{}'));
+            const importedExpenses = Array.isArray(parsed) ? parsed : parsed.expenses;
+            if (!Array.isArray(importedExpenses)) {
+              showToast('Invalid Bonus Action JSON backup file.', 'pink');
+              return;
+            }
+
+            openConfirmModal(
+              'Restore From JSON Backup?',
+              `This will replace your current browser dashboard data with ${importedExpenses.length} expense(s)` +
+                (Array.isArray(parsed.products) ? `, ${parsed.products.length} product(s)` : '') +
+                (Array.isArray(parsed.orders) ? `, and ${parsed.orders.length} order(s)` : '') +
+                '. Continue?',
+              () => {
+                state.expenses = importedExpenses
+                  .filter((row) => row && typeof row === 'object')
+                  .map((row, idx) => ({
+                    id: String(row.id || `imp-${Date.now()}-${idx}`),
+                    date: String(row.date || getTodayIsoDate()),
+                    vendor: String(row.vendor || 'Imported Vendor'),
+                    amount: Number.isFinite(Number(row.amount)) ? Number(Number(row.amount).toFixed(2)) : 0,
+                    category: normalizeExpenseCategory(row.category),
+                    costType: row.costType === 'Overhead' ? 'Overhead' : 'COGS',
+                    notes: String(row.notes || ''),
+                    receiptName: String(row.receiptName || ''),
+                    receiptMime: String(row.receiptMime || ''),
+                    receiptDataUrl: String(row.receiptDataUrl || ''),
+                  }));
+
+                if (Array.isArray(parsed.products)) state.products = parsed.products;
+                if (Array.isArray(parsed.orders)) state.orders = parsed.orders;
+                if (Array.isArray(parsed.inventory)) state.inventory = parsed.inventory;
+                if (Array.isArray(parsed.inventoryLogs)) state.inventoryLogs = parsed.inventoryLogs;
+
+                ensureInventoryRecordsForProducts();
+                saveToStorage();
+                renderAll();
+                showToast('Backup restored successfully!', 'emerald');
+              }
+            );
+          } catch (err) {
+            console.error(err);
+            showToast('Could not parse JSON file.', 'pink');
+          } finally {
+            dom.importJsonInput.value = '';
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      // Event Wiring
+      function bindEvents() {
+        // Navigation Tabs
+        dom.tabButtons.forEach((btn) => {
+          btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+        });
+        dom.jumpTabButtons.forEach((btn) => {
+          btn.addEventListener('click', () => switchTab(btn.getAttribute('data-jump-tab')));
+        });
+
+        // Exports & JSON Restore
+        dom.btnExportCsv.addEventListener('click', exportScheduleCCsv);
+        dom.btnExportCatalogCsv.addEventListener('click', exportCatalogOrdersCsv);
+        dom.btnExportInventoryCsv.addEventListener('click', exportInventoryCsv);
+        dom.btnExportJson.addEventListener('click', exportJsonBackup);
+        dom.importJsonInput.addEventListener('change', (e) => handleJsonRestore(e.target.files[0]));
+
+        // Receipt Dropzone & OCR
+        dom.receiptDropzone.addEventListener('click', () => dom.receiptFileInput.click());
+        dom.receiptDropzone.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            dom.receiptFileInput.click();
+          }
+        });
+        dom.receiptFileInput.addEventListener('change', (e) => handleReceiptFile(e.target.files[0]));
+        dom.receiptDropzone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dom.receiptDropzone.classList.add('border-hotPink', 'bg-hotPink/10');
+        });
+        dom.receiptDropzone.addEventListener('dragleave', () => {
+          dom.receiptDropzone.classList.remove('border-hotPink', 'bg-hotPink/10');
+        });
+        dom.receiptDropzone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dom.receiptDropzone.classList.remove('border-hotPink', 'bg-hotPink/10');
+          if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleReceiptFile(e.dataTransfer.files[0]);
+          }
+        });
+
+        dom.btnRunSelectedSample.addEventListener('click', () => runSampleReceiptOcr(dom.sampleReceiptPreset.value));
+        dom.btnReapplyOcr.addEventListener('click', () => applyOcrDataToForm(state.lastOcr));
+        dom.btnClearDraftReceipt.addEventListener('click', clearDraftReceipt);
+
+        // Cost Type Toggles & Expense Form
+        dom.costTypeCogsBtn.addEventListener('click', () => setCostType('COGS'));
+        dom.costTypeOverheadBtn.addEventListener('click', () => setCostType('Overhead'));
+        dom.expenseForm.addEventListener('submit', handleExpenseFormSubmit);
+        dom.btnCancelEdit.addEventListener('click', resetExpenseForm);
+
+        // Expense Filters & Table Actions
+        dom.taxYearSelect.addEventListener('change', (e) => {
+          state.selectedYear = e.target.value;
+          renderExpensesSection();
+        });
+        dom.filterSearch.addEventListener('input', (e) => {
+          state.filters.search = e.target.value;
+          renderExpensesSection();
+        });
+        dom.filterCategory.addEventListener('change', (e) => {
+          state.filters.category = e.target.value;
+          renderExpensesSection();
+        });
+        dom.filterCostType.addEventListener('change', (e) => {
+          state.filters.costType = e.target.value;
+          renderExpensesSection();
+        });
+        dom.filterMonth.addEventListener('change', (e) => {
+          state.filters.month = e.target.value;
+          renderExpensesSection();
+        });
+        dom.btnResetFilters.addEventListener('click', () => {
+          state.filters = { search: '', category: 'ALL', costType: 'ALL', month: '' };
+          dom.filterSearch.value = '';
+          dom.filterCategory.value = 'ALL';
+          dom.filterCostType.value = 'ALL';
+          dom.filterMonth.value = '';
+          renderExpensesSection();
+        });
+
+        dom.expenseTableBody.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          if (action === 'view-receipt') openReceiptModal(id);
+          if (action === 'edit-expense') startEditExpense(id);
+          if (action === 'delete-expense') deleteExpense(id);
+        });
+
+        // Product Catalog Events
+        dom.prodPriceInput.addEventListener('input', updateLiveProductMarginPreview);
+        dom.prodCogsInput.addEventListener('input', updateLiveProductMarginPreview);
+        dom.productForm.addEventListener('submit', handleProductFormSubmit);
+        dom.btnCancelProductEdit.addEventListener('click', resetProductForm);
+        dom.prodFilterSearch.addEventListener('input', (e) => {
+          state.prodFilters.search = e.target.value;
+          renderProductsSection();
+        });
+        dom.prodFilterType.addEventListener('change', (e) => {
+          state.prodFilters.type = e.target.value;
+          renderProductsSection();
+        });
+        dom.prodFilterStatus.addEventListener('change', (e) => {
+          state.prodFilters.status = e.target.value;
+          renderProductsSection();
+        });
+        dom.productTableBody.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          if (action === 'edit-product') startEditProduct(id);
+          if (action === 'dup-product') duplicateProduct(id);
+          if (action === 'delete-product') deleteProduct(id);
+        });
+
+        // Orders Events
+        dom.orderProductSelect.addEventListener('change', syncOrderSelectedProductPrice);
+        dom.btnAddOrderLine.addEventListener('click', addStagedOrderLine);
+        dom.orderStagedLinesBody.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-action="remove-staged-line"]');
+          if (!btn) return;
+          const lineId = btn.getAttribute('data-id');
+          state.stagedOrderLines = state.stagedOrderLines.filter((l) => l.lineId !== lineId);
+          renderStagedOrderLines();
+        });
+        dom.orderForm.addEventListener('submit', handleOrderFormSubmit);
+        dom.ordersTableBody.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          if (action === 'fulfill-order') toggleOrderFulfillment(id);
+          if (action === 'delete-order') deleteOrder(id);
+        });
+
+        // Inventory Events
+        dom.invAdjustForm.addEventListener('submit', handleInventoryAdjustSubmit);
+        dom.btnSyncCatalogInventory.addEventListener('click', () => {
+          ensureInventoryRecordsForProducts();
+          saveToStorage();
+          renderAll();
+          showToast('All catalog products synced to Inventory!', 'cyan');
+        });
+        dom.invFilterSearch.addEventListener('input', (e) => {
+          state.invFilters.search = e.target.value;
+          renderInventorySection();
+        });
+        dom.invFilterStatus.addEventListener('change', (e) => {
+          state.invFilters.status = e.target.value;
+          renderInventorySection();
+        });
+        dom.inventoryTableBody.addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-action]');
+          if (!btn) return;
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          if (action === 'inv-plus') quickAdjustInventory(id, 1);
+          if (action === 'inv-minus') quickAdjustInventory(id, -1);
+        });
+
+        // Modals
+        dom.btnCloseReceiptModal.addEventListener('click', () => dom.receiptModal.classList.add('hidden'));
+        dom.receiptModal.addEventListener('click', (e) => {
+          if (e.target === dom.receiptModal) dom.receiptModal.classList.add('hidden');
+        });
+        dom.btnConfirmCancel.addEventListener('click', closeConfirmModal);
+        dom.btnConfirmProceed.addEventListener('click', () => {
+          if (typeof pendingConfirmCallback === 'function') pendingConfirmCallback();
+          closeConfirmModal();
+        });
+        dom.confirmModal.addEventListener('click', (e) => {
+          if (e.target === dom.confirmModal) closeConfirmModal();
+        });
+      }
+
+      // Initialize
+      function init() {
+        loadFromStorage();
+        dom.dateInput.value = getTodayIsoDate();
+        dom.orderDateInput.value = getTodayIsoDate();
+        bindEvents();
+        switchTab('profit');
+        renderAll();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
